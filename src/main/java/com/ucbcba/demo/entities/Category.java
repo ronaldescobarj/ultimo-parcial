@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Min;
 import java.util.List;
 
+//this is the class category
 @Entity
 public class Category {
 
