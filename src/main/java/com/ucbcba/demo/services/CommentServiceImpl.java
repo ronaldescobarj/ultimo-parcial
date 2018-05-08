@@ -1,7 +1,7 @@
 package com.ucbcba.demo.services;
 
 import com.ucbcba.demo.entities.Comment;
-import com.ucbcba.demo.repository.CommentRepository;
+import com.ucbcba.demo.repositories.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -29,12 +29,12 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment getComment(Integer id) {
-        return commentRepository.findById(id).get();
+        return commentRepository.findOne(id);
     }
 
     @Override
     public void deleteComment(Integer id) {
-        commentRepository.deleteById(id);
+        commentRepository.delete(id);
     }
 
 }

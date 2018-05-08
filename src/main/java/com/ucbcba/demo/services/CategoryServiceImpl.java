@@ -1,7 +1,7 @@
 package com.ucbcba.demo.services;
 
 import com.ucbcba.demo.entities.Category;
-import com.ucbcba.demo.repository.CategoryRepository;
+import com.ucbcba.demo.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -27,10 +27,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     public Category getCategory(Integer id) {
-        return this.categoryRepository.findById(id).get();
+        return this.categoryRepository.findOne(id);
     }
 
     public void deleteCategory(Integer id) {
-        this.categoryRepository.deleteById(id);
+        this.categoryRepository.delete(id);
     }
 }

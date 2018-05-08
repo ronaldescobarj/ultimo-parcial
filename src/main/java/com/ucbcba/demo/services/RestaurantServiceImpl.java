@@ -1,14 +1,14 @@
 package com.ucbcba.demo.services;
 
 import com.ucbcba.demo.entities.Restaurant;
-import com.ucbcba.demo.repository.RestaurantRepository;
+import com.ucbcba.demo.repositories.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
-    
+
     private RestaurantRepository restaurantRepository;
 
     @Autowired
@@ -29,12 +29,12 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public Restaurant getRestaurant(Integer id) {
-        return restaurantRepository.findById(id).get();
+        return restaurantRepository.findOne(id);
     }
 
     @Override
     public void deleteRestaurant(Integer id) {
-        restaurantRepository.deleteById(id);
+        restaurantRepository.delete(id);
     }
-    
+
 }

@@ -1,7 +1,7 @@
 package com.ucbcba.demo.services;
 
 import com.ucbcba.demo.entities.City;
-import com.ucbcba.demo.repository.CityRepository;
+import com.ucbcba.demo.repositories.CityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -27,10 +27,10 @@ public class CityServiceImpl implements CityService {
     }
 
     public City getCity(Integer id) {
-        return this.cityRepository.findById(id).get();
+        return this.cityRepository.findOne(id);
     }
 
     public void deleteCity(Integer id) {
-        this.cityRepository.deleteById(id);
+        this.cityRepository.delete(id);
     }
 }

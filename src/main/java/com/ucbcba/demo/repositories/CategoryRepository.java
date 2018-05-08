@@ -1,4 +1,4 @@
-package com.ucbcba.demo.repository;
+package com.ucbcba.demo.repositories;
 
 import com.ucbcba.demo.entities.Category;
 import com.ucbcba.demo.entities.City;
