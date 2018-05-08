@@ -1,4 +1,4 @@
-package com.ucbcba.demo.repository;
+package com.ucbcba.demo.repositories;
 
 import com.ucbcba.demo.entities.Comment;
 import org.springframework.data.repository.CrudRepository;

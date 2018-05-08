@@ -32,7 +32,7 @@ public class RegisterController {
         if (bindingResult.hasErrors()) {
             return "register";
         }
-        userService.saveUser(user);
+        userService.save(user);
         return "redirect:/register";
     }
 }
