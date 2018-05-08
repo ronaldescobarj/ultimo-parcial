@@ -1,41 +1,19 @@
 package com.ucbcba.demo.entities;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "user")
 public class User {
+    private Long id;
+    private String username;
+    private String password;
     private String passwordConfirm;
     private Set<Role> roles;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    @NotNull
-    @Size(min=1, message = "Este campo no puede estar vacio")
-    private String firstName;
-
-    @NotNull
-    @Size(min=1, message = "Este campo no puede estar vacio")
-    private String lastName;
-
-    @NotNull
-    @Size(min=1, message = "Este campo no puede estar vacio")
-    private String userName;
-
-    @NotNull
-    @Size(min=8, message = "La contraseña debe ser de al menos 8 caracteres")
-    private String userPassword;
-
-    public User() {
-    }
-
     public Long getId() {
         return id;
     }
@@ -45,19 +23,19 @@ public class User {
     }
 
     public String getUsername() {
-        return userName;
+        return username;
     }
 
-    public void setUsername(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
-        return userPassword;
+        return password;
     }
 
     public void setPassword(String password) {
-        this.userPassword = userPassword;
+        this.password = password;
     }
 
     @Transient
@@ -78,20 +56,5 @@ public class User {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
 }
+                                        
