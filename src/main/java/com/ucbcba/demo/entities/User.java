@@ -6,6 +6,7 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -16,15 +17,19 @@ public class User {
     private Integer id;
 
     @NotNull
+    @Size(min=1, message = "Este campo no puede estar vacio")
     private String firstName;
 
     @NotNull
+    @Size(min=1, message = "Este campo no puede estar vacio")
     private String lastName;
 
     @NotNull
+    @Size(min=1, message = "Este campo no puede estar vacio")
     private String userName;
 
     @NotNull
+    @Size(min=8, message = "La contraseña debe ser de al menos 8 caracteres")
     private String userPassword;
 
     public Integer getId() {
