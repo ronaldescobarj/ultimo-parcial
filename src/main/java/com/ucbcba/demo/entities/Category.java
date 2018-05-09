@@ -15,7 +15,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @ManyToMany(mappedBy = "categories")
+    @ManyToMany(cascade = CascadeType.REMOVE, mappedBy = "categories")
     private Set<Restaurant> restaurants;
 
     @NotNull

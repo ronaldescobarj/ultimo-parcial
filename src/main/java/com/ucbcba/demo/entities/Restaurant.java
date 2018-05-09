@@ -29,8 +29,8 @@ public class Restaurant {
     @JoinColumn(name = "city_id")
     private City city;
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
-    List<Comment> comments;
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "restaurant_category", joinColumns = @JoinColumn(name = "restaurant_id", referencedColumnName = "id"),
@@ -38,7 +38,7 @@ public class Restaurant {
     public Set<Category> categories;
 
     @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL)
-    List<Photo> photo;
+    private List<Photo> photo;
 
     public List<Comment> getComments() {
         return comments;

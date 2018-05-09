@@ -28,7 +28,7 @@ public class Role {
         this.name = name;
     }
 
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = "roles", cascade = CascadeType.REMOVE)
     public Set<User> getUsers() {
         return users;
     }

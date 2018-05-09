@@ -1,4 +1,4 @@
-package com.ucbcba.demo.Controllers;
+package com.ucbcba.demo.controllers;
 
 import com.ucbcba.demo.entities.City;
 import com.ucbcba.demo.entities.Photo;
@@ -32,94 +32,97 @@ import java.util.List;
 @Controller
 public class RestaurantController {
 
-        private RestaurantService restaurantService;
-        private CategoryService categoryService;
-        private CityService cityService;
-        private PhotoService photoService;
+    private RestaurantService restaurantService;
+    private CategoryService categoryService;
+    private CityService cityService;
+    private PhotoService photoService;
 
-        @Autowired
-        public void setRestaurantService(RestaurantService restaurantService) {
-            this.restaurantService = restaurantService;
-        }
-         @Autowired
-         public void setCategoryService(CategoryService categoryService) {
-            this.categoryService = categoryService;
-        }
+    @Autowired
+    public void setRestaurantService(RestaurantService restaurantService) {
+        this.restaurantService = restaurantService;
+    }
 
-        @Autowired
-        public void setCityService(CityService cityService) {
-            this.cityService = cityService;
-        }
-        @Autowired
-        public void setPhotoService(PhotoService photoService) {
-            this.photoService = photoService;
-        }
+    @Autowired
+    public void setCategoryService(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
-        @RequestMapping(value ="/restaurants", method = RequestMethod.GET)
-        public String listAllRestaurants(Model model) {
-            model.addAttribute("restaurants",restaurantService.listAllRestaurants());
-            return "restaurants";
-        }
+    @Autowired
+    public void setCityService(CityService cityService) {
+        this.cityService = cityService;
+    }
 
-        @RequestMapping(value="/newRestaurant")
-        public String newRestaurant(Model model) {
-            model.addAttribute("restaurantCategories",categoryService.listAllCategories());
-            model.addAttribute("cities",cityService.listAllCities());
-            return "newRestaurant";
-        }
-        @RequestMapping(value="/savePhotos")
-        public void savePhotos(Photo photo) {
-            photoService.savePhoto(photo);
-        }
+    @Autowired
+    public void setPhotoService(PhotoService photoService) {
+        this.photoService = photoService;
+    }
 
+    @RequestMapping(value = "admin/restaurants", method = RequestMethod.GET)
+    public String listAllRestaurants(Model model) {
+        model.addAttribute("restaurants", restaurantService.listAllRestaurants());
+        return "restaurants";
+    }
 
-        @RequestMapping(value = "/saveRestaurant", method = RequestMethod.POST)
-        public String saveRestaurant(Restaurant restaurant, @RequestParam("file") MultipartFile file) throws IOException, SQLException {
-            restaurantService.saveRestaurant(restaurant);
-            byte[] pixel  = file.getBytes();
-            Photo photo = new Photo();
-            photo.setRestaurant(restaurant);
-            photo.setPhoto(pixel);
-            photoService.savePhoto(photo);
-            return "redirect:/newRestaurant";
+    @RequestMapping(value = "admin/restaurant/new")
+    public String newRestaurant(Model model) {
+        model.addAttribute("restaurantCategories", categoryService.listAllCategories());
+        model.addAttribute("cities", cityService.listAllCities());
+        model.addAttribute("restaurant", new Restaurant());
+        return "newRestaurant";
+    }
 
-        }
+    @RequestMapping(value = "admin/restaurant/save", method = RequestMethod.POST)
+    public String saveRestaurant(Restaurant restaurant, @RequestParam("file") MultipartFile file) {
+        restaurantService.saveRestaurant(restaurant);
+//        byte[] pixel = file.getBytes();
+//        Photo photo = new Photo();
+//        photo.setRestaurant(restaurant);
+//        photo.setPhoto(pixel);
+//        photoService.savePhoto(photo);
+        return "redirect:/admin/restaurant/new";
+    }
 
-            /*@RequestMapping(value = "/home")
-            public ModelAndView home()  throws IOException {
-                ModelAndView view = new ModelAndView("index");
-                view.addObject("image_id", 15);
-                return view;
-            }*/
-            @RequestMapping(value = "/image/{image_id}", produces = MediaType.IMAGE_PNG_VALUE)
-            public ResponseEntity<byte[]> getImage(@PathVariable("image_id") Long imageId) throws IOException {
-              //  model.addAttribute("restaurant",restaurantService.getRestaurant(id));
-                Iterable<Photo> i = photoService.listAllPhotosById(9);
-                List<Photo> x = (List<Photo>) i;
-                byte[] imageContent = x.get(0).getPhoto();
-                final HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.ALL);
-                return new ResponseEntity<byte[]>(imageContent, headers, HttpStatus.OK);
-            }
+    @RequestMapping("admin/restaurant/{id}")
+    String showRestaurant(@PathVariable Integer id, Model model) {
+        model.addAttribute("restaurant", restaurantService.getRestaurant(id));
+        model.addAttribute("photos", photoService.listAllPhotosById(id));
+        return "ShowRestaurant";
+    }
 
-            @RequestMapping("/restaurant/{id}")
-        String showRestaurant(@PathVariable Integer id, Model model) {
-            model.addAttribute("restaurant",restaurantService.getRestaurant(id));
-            model.addAttribute("photos",photoService.listAllPhotosById(id));
-            return "ShowRestaurant";
-        }
+    @RequestMapping(value = "admin/restaurant/edit/{id}")
+    String editRestaurant(@PathVariable Integer id, Model model) {
+        model.addAttribute("restaurant", restaurantService.getRestaurant(id));
+        model.addAttribute("restaurantCategories", categoryService.listAllCategories());
+        model.addAttribute("cities", cityService.listAllCities());
+        return "restaurantForm";
+    }
 
-        @RequestMapping(value ="/restaurant/edit/{id}")
-        String editRestaurant(@PathVariable Integer id,Model model) {
-            model.addAttribute("restaurant", restaurantService.getRestaurant(id));
-            model.addAttribute("restaurantCategories",categoryService.listAllCategories());
-            model.addAttribute("cities",cityService.listAllCities());
-            return "editRestaurant";
-        }
+    @RequestMapping(value = "admin/restaurant/delete/{id}")
+    String delete(@PathVariable Integer id, Model model) {
+        restaurantService.deleteRestaurant(id);
+        return "redirect:/admin/restaurants";
+    }
 
-        @RequestMapping(value = "/restaurant/delete/{id}")
-        String delete(@PathVariable Integer id,Model model) {
-            restaurantService.deleteRestaurant(id);
-            return "redirect:/newRestaurant";
-        }
+    /*@RequestMapping(value = "/home")
+    public ModelAndView home()  throws IOException {
+        ModelAndView view = new ModelAndView("index");
+        view.addObject("image_id", 15);
+        return view;
+    }*/
+    @RequestMapping(value = "admin/image/{image_id}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getImage(@PathVariable("image_id") Long imageId) throws IOException {
+        //  model.addAttribute("restaurant",restaurantService.getRestaurant(id));
+        Iterable<Photo> i = photoService.listAllPhotosById(9);
+        List<Photo> x = (List<Photo>) i;
+        byte[] imageContent = x.get(0).getPhoto();
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.ALL);
+        return new ResponseEntity<byte[]>(imageContent, headers, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "admin/savePhotos")
+    public void savePhotos(Photo photo) {
+        photoService.savePhoto(photo);
+    }
+
 }
