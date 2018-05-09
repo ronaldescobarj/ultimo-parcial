@@ -1,7 +1,7 @@
 package com.ucbcba.demo.services;
 
 import com.ucbcba.demo.entities.Photo;
-import com.ucbcba.demo.repository.PhotoRepository;
+import com.ucbcba.demo.repositories.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -46,12 +46,12 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public Photo getPhoto(Integer id) {
-        return photoRepository.findById(id).get();
+        return photoRepository.findOne(id);
     }
 
     @Override
     public void deletePhoto(Integer id) {
-        photoRepository.deleteById(id);
+        photoRepository.delete(id);
     }
     
 }
