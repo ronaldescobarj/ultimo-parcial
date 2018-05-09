@@ -6,6 +6,8 @@ public interface PhotoService {
 
     Iterable<Photo> listAllPhotos();
 
+    Iterable<Photo>listAllPhotosById(Integer id);
+
     void savePhoto(Photo photo);
 
     Photo getPhoto(Integer id);

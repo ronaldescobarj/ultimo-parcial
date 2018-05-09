@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class PhotoServiceImpl implements PhotoService {
 
@@ -20,6 +23,20 @@ public class PhotoServiceImpl implements PhotoService {
     @Override
     public Iterable<Photo> listAllPhotos() {
         return photoRepository.findAll();
+    }
+
+    @Override
+    public Iterable<Photo> listAllPhotosById(Integer id) {
+        List<Photo> res = new ArrayList<Photo>();
+        List<Photo> lista = (List<Photo>) photoRepository.findAll();
+        for(int i=0;i<lista.size();i++)
+        {
+            if(lista.get(i).getRestaurant().getId() == id)
+            {
+                res.add(lista.get(i));
+            }
+        }
+        return (Iterable<Photo>) res;
     }
 
     @Override

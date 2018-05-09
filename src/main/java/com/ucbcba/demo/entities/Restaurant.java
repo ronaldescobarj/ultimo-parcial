@@ -20,15 +20,14 @@ public class Restaurant {
     private String name;
 
     @NotNull
-    private Integer likes;
+    private String description;
+
+    @NotNull
+    private Integer likes = 0;
 
     @ManyToOne
     @JoinColumn(name = "city_id")
     private City city;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     List<Comment> comments;
@@ -37,6 +36,9 @@ public class Restaurant {
     @JoinTable(name = "restaurant_category", joinColumns = @JoinColumn(name = "restaurant_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name="category_id", referencedColumnName = "id"))
     public Set<Category> categories;
+
+    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL)
+    List<Photo> photo;
 
     public List<Comment> getComments() {
         return comments;
@@ -74,17 +76,8 @@ public class Restaurant {
 
         return id;
     }
-
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Integer getLikes() {
@@ -93,5 +86,21 @@ public class Restaurant {
 
     public void setLikes(Integer likes) {
         this.likes = likes;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<Photo> getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(List<Photo> photos) {
+        this.photo = photos;
     }
 }

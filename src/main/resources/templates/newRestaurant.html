@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <title>New Restaurant</title>
+    <meta charset="UTF-8">
+    <style>
+        body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+    </style>
+</head>
+<body>
+    <div class="container">
+            <form class="form-horizontal" action="/saveRestaurant" enctype="multipart/form-data" method="POST">
+                <br>
+                <div class="py-5 text-center blue">
+                    <h1><b>NEW RESTAURANT</b></h1>
+                </div>
+                <br><br>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Name:</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="name" required id="name" class="form-control" placeholder="Name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Description:</label>
+                    <div class="col-sm-10">
+                        <textarea name="description" required id="description" class="form-control" rows="5"placeholder="Description"></textarea>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2" >Categories:</label>
+                    <div class="col-sm-10">
+                        <select multiple class="form-control" name="categories" id="categories" >
+                            <option th:each="category : ${restaurantCategories}"
+                                    th:value="${category.id}"
+                                    th:text="${category.name}">restaurantCategory</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2" >City:</label>
+                    <div class="col-sm-10">
+                        <select name="city" id="city" class="form-control">
+                            <option th:each="city : ${cities}" th:value="${city.id}" th:text="${city.name}">restaurantCity</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2" >Fotos:</label>
+                    <div class="col-sm-10">
+                        <input type="file" name="file" id="photo" class="form-control" multiple >
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button type="sumbit" value="Guardar" class="btn btn-primary btn-lg">SAVE</button>
+                </div>
+                <br>
+        </form>
+    </div>
+</body>
+</html>

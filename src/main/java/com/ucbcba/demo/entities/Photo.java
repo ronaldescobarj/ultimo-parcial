@@ -2,10 +2,13 @@ package com.ucbcba.demo.entities;
 
 import org.hibernate.annotations.ColumnDefault;
 
+
 import javax.persistence.*;
 import javax.sql.rowset.serial.SerialBlob;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Min;
+import java.awt.*;
+import java.sql.Blob;
 import java.util.List;
 import java.util.Set;
 
@@ -16,8 +19,9 @@ public class Photo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    @Lob @Basic(fetch = FetchType.LAZY)
     @NotNull
-    private SerialBlob photo;
+    private byte[] photo;
 
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
@@ -31,11 +35,11 @@ public class Photo {
         this.id = id;
     }
 
-    public SerialBlob getPhoto() {
+    public byte[] getPhoto() {
         return photo;
     }
 
-    public void setPhoto(SerialBlob photo) {
+    public void setPhoto(byte[] photo) {
         this.photo = photo;
     }
 
