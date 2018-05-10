@@ -1,19 +1,122 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-</head>
-<body>
-<p>
-    You can find <b>your inlined image</b> just below this text.
-</p>
-<p>
-    <!--<img th:src="@{/image/${image_id}}" />-->
-    <img th:src="${'/image/' + image_id}" />
-</p>
-<p>
-    Regards, <br />
-      <em>The Thymeleaf Team</em>
-</p>
-</body>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+	<head>
+	<meta charset="utf-8"/>
+	<title>Restaurant</title>
+
+	<link href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700,400italic,700italic|Merriweather:300,400italic,300italic,400,700italic' rel='stylesheet' type='text/css'/>
+	<link rel="stylesheet" href="css/bootstrap.css"/>
+	<link rel="stylesheet" href="css/style.css"/>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	</head>
+	<body>
+
+	<div id="fh5co-container">
+		
+		<div class="js-sticky">
+			<div class="fh5co-main-nav">
+				<div class="container-fluid">
+					<div class="fh5co-menu-1">
+						<a href="#" data-nav-section="home"><button class="button">Home</button></a>
+					</div>
+					<div class="fh5co-logo">
+						<a href="index.html">Tri Hotel</a>
+					</div>
+					<div class ="text-left">
+						<div class="fh5co-menu-2" >
+							<a href="#" data-nav-section="menu"><button class="button">Register</button></a>
+							<a href="#" data-nav-section="events"><button class="button">Login</button></a>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+		<div>
+				<ul >
+					<li>
+						<a><input class="form-control my-0 py-1" type="text" placeholder="Search..." aria-label="Search"/>						</a>	
+					</li>
+					<li><a><button class="btn btn-default">VerLista</button></a></li>
+					<li><a><button class="btn btn-default">Vista</button></a></li>
+					
+					<li><a>
+						<select class="btn btn-default">
+							<option value="Cochabamba">Cochabamba</option>
+							<option value="La Paz">La Paz</option>
+							<option value="Tarija">Tarija</option>
+							<option value="Santa Cruz">Santa Cruz</option>
+						</select>
+					</li></a>
+				</ul>
+		</div>
+			<div id="block1">
+				<table>
+					<tr>
+						<th>Name</th>
+						<th>Adress</th>
+						<th>Category</th>
+					</tr>
+					<tr>
+						<td>Kentucky Fried Chicken</td>
+						<td>Pando</td>
+						<td>***</td>
+					</tr>
+					<tr>
+						<td>Lousiana Fries Chicken</td>
+						<td>Melchor Perez</td>
+						<td>****</td>
+					</tr>
+					<tr>
+						<td>Burger King</td>
+						<td>Prado</td>
+						<td>***</td>
+					</tr>
+					<tr>
+						<td>Mc Donalds</td>
+						<td>Plazuela Colon</td>
+						<td>***</td>
+					</tr>
+					<tr>
+						<td>Hooters</td>
+						<td>C.La Paz</td>
+						<td>**</td>
+					</tr>
+					<tr>
+						<td>Taco Bell</td>
+						<td>C. Mexico</td>
+						<td>**</td>
+					</tr>
+					<tr>
+						<td>Fridays</td>
+						<td>C. Ramon Rivero</td>
+						<td>***</td>
+					</tr>
+					<tr>
+						<td>Tuesdays</td>
+						<td>C. Pando</td>
+						<td>***</td>
+					</tr>
+					<tr>
+						<td>Paprika</td>
+						<td>C. Chuquisaca</td>
+						<td>****</td>
+					</tr>
+					<tr>
+						<td>Cayenna</td>
+						<td>C. Lincoln</td>
+						<td>**</td>
+					</tr>
+				</table>
+		  </div>
+	</div>
+	<div class="footer">
+			<p>The best restaurants browser</p>
+	</div>
+	
+	</body>
 </html>
+

@@ -70,15 +70,6 @@ public class LoginController {
         return "login";
     }
 
-    @RequestMapping(value = "/admin/home", method = RequestMethod.GET)
-    public String home(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findByUsername(auth.getName());
-        model.addAttribute("userName", "Welcome " + user.getUsername());
-        model.addAttribute("adminMessage", "Content Available Only for Users with Admin Role");
-        return "admin/home";
-    }
-
     @RequestMapping(value = {"/", "/welcome"}, method = RequestMethod.GET)
     public String welcome(Model model) {
         return "welcome";
