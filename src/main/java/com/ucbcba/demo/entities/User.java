@@ -10,7 +10,10 @@ public class User {
     private String username;
     private String password;
     private String passwordConfirm;
-    private Set<Role> roles;
+    private String role = "user";
+    private String email;
+    private String firstName;
+    private String lastName;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -47,14 +50,36 @@ public class User {
         this.passwordConfirm = passwordConfirm;
     }
 
-    @ManyToMany(cascade = CascadeType.REMOVE)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    public Set<Role> getRoles() {
-        return roles;
+    public String getRole() {
+        return role;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }
                                         
