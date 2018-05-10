@@ -38,16 +38,33 @@ public class LoginController {
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public String createNewUser(Model model, @Valid User user, BindingResult bindingResult) {
 //        userValidator.validate(userForm, bindingResult);
+        User emailExists= userService.findByEmail(user.getEmail());
         User userExists = userService.findByUsername(user.getUsername());
+        String password = user.getPassword();
+        String confirmation = user.getPasswordConfirm();
+        if (emailExists != null) {
+            bindingResult
+                    .rejectValue("email", "error.user",
+                            "There is already a user registered with the email provided");
+            return "registration";
+        }
         if (userExists != null) {
             bindingResult
                     .rejectValue("username", "error.user",
                             "There is already a user registered with the username provided");
             return "registration";
         }
+        if(password.compareTo(confirmation)==1) {
+            bindingResult
+                    .rejectValue("passwordConfirm","error.user",
+                            "Passwords does not match");
+            return "registration";
+        }
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("errorMessage", "Invalid information, please try again");
             return "registration";
+
         } else {
             userService.save(user);
             securityService.autologin(user.getUsername(), user.getPasswordConfirm());

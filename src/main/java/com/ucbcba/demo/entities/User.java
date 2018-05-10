@@ -1,18 +1,25 @@
 package com.ucbcba.demo.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
 @Table(name = "user")
 public class User {
     private Long id;
+    @Size(min=1, message="This field cannot be blank")
     private String username;
+    @Size(min=1, message="This field cannot be blank")
     private String password;
+    @Size(min=1, message="You must confirm your password")
     private String passwordConfirm;
     private String role = "user";
+    @Size(min=1, message="This field cannot be blank")
     private String email;
+    @Size(min=1, message="This field cannot be blank")
     private String firstName;
+    @Size(min=1, message="This field cannot be blank")
     private String lastName;
 
     @Id

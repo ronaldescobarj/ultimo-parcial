@@ -1,10 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Restaurants</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
 </head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
 <body>
+<table>
+    <tr>
+        <th>
+            Nombre
+        </th>
+        <th>
+            Descripcion
+        </th>
+        <th>
+            Opciones
+        </th>
+    </tr>
+
+    <tr th:each="restaurant : ${restaurants}">
+        <td th:text="${restaurant.name}">
+        </td>
+        <td th:text="${restaurant.description}">
+        </td>
+        <td>
+            <a th:href="${'/admin/restaurant/edit/' + restaurant.id}">Editar</a>
+            <a th:href="${'/admin/restaurant/delete/' + restaurant.id}">Eliminar</a>
+        </td>
+    </tr>
+
+</table>
 
 </body>
 </html>
