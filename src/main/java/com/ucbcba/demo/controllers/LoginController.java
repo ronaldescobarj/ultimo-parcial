@@ -87,8 +87,8 @@ public class LoginController {
         return "login";
     }
 
-    @RequestMapping(value = {"/", "/welcome"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
     public String welcome(Model model) {
-        return "welcome";
+        return "home";
     }
 }
