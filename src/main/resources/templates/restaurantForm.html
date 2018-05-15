@@ -58,10 +58,21 @@
         </div>
         <div class="form-group">
             <label class="control-label col-sm-2">Images:</label>
-            <div class="col-sm-10">
-                <input type="file" name="file" th:value="${restaurant.photo}" id="photo" class="form-control"/>
+
+            <div class="row">
+                <input type="file" name="file" th:value="${restaurant.photo}" id="photo" class="form-control" multiple="multiple"/>
+                <div class="col-sm-6 col-md-3">
+                    <div class="card" th:each="photo : ${photos}">
+                        <img class="thumbnail" th:src= "@{'data:image/jpg;base64,' +  ${photo}}" />
+                    </div>
+                </div>
             </div>
+            <div th:each="image : ${images}">
+                <a th:href= "${'/restaurant/delete/photo/' + image.id}" >Eliminar </a>
+            </div>
+
         </div>
+
         <div class="text-center">
             <button type="sumbit" value="save" class="btn btn-primary btn-lg">SAVE</button>
         </div>

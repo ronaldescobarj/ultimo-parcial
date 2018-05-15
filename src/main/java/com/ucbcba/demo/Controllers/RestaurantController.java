@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.codec.Base64;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -72,28 +74,54 @@ public class RestaurantController {
     }
 
     @RequestMapping(value = "admin/restaurant/save", method = RequestMethod.POST)
-    public String saveRestaurant(Restaurant restaurant, @RequestParam("file") MultipartFile file) {
+    public String saveRestaurant(Restaurant restaurant, @RequestParam("file") MultipartFile[] files) throws IOException {
         restaurantService.saveRestaurant(restaurant);
-//        byte[] pixel = file.getBytes();
-//        Photo photo = new Photo();
-//        photo.setRestaurant(restaurant);
-//        photo.setPhoto(pixel);
-//        photoService.savePhoto(photo);
+        byte[] pixel;
+        for(int i=0;i<files.length;i++)
+        {
+            pixel = files[i].getBytes();
+            Photo photo = new Photo();
+            photo.setRestaurant(restaurant);
+            photo.setPhoto(pixel);
+            photoService.savePhoto(photo);
+        }
         return "redirect:/admin/restaurant/new";
     }
 
     @RequestMapping("admin/restaurant/{id}")
-    String showRestaurant(@PathVariable Integer id, Model model) {
+    String showRestaurant(@PathVariable Integer id, Model model) throws UnsupportedEncodingException {
         model.addAttribute("restaurant", restaurantService.getRestaurant(id));
-        model.addAttribute("photos", photoService.listAllPhotosById(id));
+        List restaurantPhotos= new ArrayList();
+        List<Photo> photos = (List<Photo>)photoService.listAllPhotosById(id);
+        byte[] encodeBase64;
+        String base64Encoded;
+        for(int i=0;i<photos.size();i++)
+        {
+            encodeBase64 = Base64.encode(photos.get(i).getPhoto());
+            base64Encoded = new String(encodeBase64,"UTF-8");
+            restaurantPhotos.add(base64Encoded);
+        }
+        model.addAttribute("photos", restaurantPhotos );
         return "ShowRestaurant";
     }
 
     @RequestMapping(value = "admin/restaurant/edit/{id}")
-    String editRestaurant(@PathVariable Integer id, Model model) {
+    String editRestaurant(@PathVariable Integer id, Model model) throws UnsupportedEncodingException {
         model.addAttribute("restaurant", restaurantService.getRestaurant(id));
         model.addAttribute("restaurantCategories", categoryService.listAllCategories());
         model.addAttribute("cities", cityService.listAllCities());
+        List restaurantPhotos= new ArrayList();
+        List<Photo> photos = (List<Photo>)photoService.listAllPhotosById(id);
+        byte[] encodeBase64;
+        String base64Encoded;
+        for(int i=0;i<photos.size();i++)
+        {
+            encodeBase64 = Base64.encode(photos.get(i).getPhoto());
+            base64Encoded = new String(encodeBase64,"UTF-8");
+            restaurantPhotos.add(base64Encoded);
+        }
+        model.addAttribute("photos", restaurantPhotos );
+        model.addAttribute("images",photoService.listAllPhotosById(id));
         return "restaurantForm";
     }
 
@@ -103,26 +131,12 @@ public class RestaurantController {
         return "redirect:/admin/restaurants";
     }
 
-    /*@RequestMapping(value = "/home")
-    public ModelAndView home()  throws IOException {
-        ModelAndView view = new ModelAndView("index");
-        view.addObject("image_id", 15);
-        return view;
-    }*/
-    @RequestMapping(value = "admin/image/{image_id}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getImage(@PathVariable("image_id") Long imageId) throws IOException {
-        //  model.addAttribute("restaurant",restaurantService.getRestaurant(id));
-        Iterable<Photo> i = photoService.listAllPhotosById(9);
-        List<Photo> x = (List<Photo>) i;
-        byte[] imageContent = x.get(0).getPhoto();
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.ALL);
-        return new ResponseEntity<byte[]>(imageContent, headers, HttpStatus.OK);
+    @RequestMapping("/restaurant/delete/photo/{id}")
+    String deletePhoto(@PathVariable Integer id) {
+        Photo photo = photoService.getPhoto(id);
+        photoService.deletePhoto(id);
+        return "redirect:/admin/restaurant/edit/"+ photo.getRestaurant().getId();
     }
 
-    @RequestMapping(value = "admin/savePhotos")
-    public void savePhotos(Photo photo) {
-        photoService.savePhoto(photo);
-    }
 
 }
