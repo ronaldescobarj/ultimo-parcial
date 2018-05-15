@@ -1,4 +1,4 @@
-package com.ucbcba.demo.controllers;
+package com.ucbcba.demo.Controllers;
 
 import com.ucbcba.demo.entities.City;
 import com.ucbcba.demo.entities.Photo;
@@ -85,7 +85,7 @@ public class RestaurantController {
             photo.setPhoto(pixel);
             photoService.savePhoto(photo);
         }
-        return "redirect:/admin/restaurant/new";
+        return "redirect:/admin/restaurants";
     }
 
     @RequestMapping("admin/restaurant/{id}")

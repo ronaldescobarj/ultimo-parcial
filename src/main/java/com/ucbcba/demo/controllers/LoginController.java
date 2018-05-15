@@ -1,4 +1,4 @@
-package com.ucbcba.demo.controllers;
+package com.ucbcba.demo.Controllers;
 
 import com.ucbcba.demo.entities.User;
 import com.ucbcba.demo.services.SecurityService;
