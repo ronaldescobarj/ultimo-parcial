@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.activation.MimetypesFileTypeMap;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.Blob;
@@ -79,11 +81,13 @@ public class RestaurantController {
         byte[] pixel;
         for(int i=0;i<files.length;i++)
         {
-            pixel = files[i].getBytes();
-            Photo photo = new Photo();
-            photo.setRestaurant(restaurant);
-            photo.setPhoto(pixel);
-            photoService.savePhoto(photo);
+            if (!files[i].isEmpty()) {
+                pixel = files[i].getBytes();
+                Photo photo = new Photo();
+                photo.setRestaurant(restaurant);
+                photo.setPhoto(pixel);
+                photoService.savePhoto(photo);
+            }
         }
         return "redirect:/admin/restaurants";
     }
