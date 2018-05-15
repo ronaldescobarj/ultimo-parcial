@@ -18,7 +18,7 @@ public class Comment {
     private String text;
 
     @NotNull
-    private Float score;
+    private Integer score;
 
     @NotNull
     private Integer likes;
@@ -47,14 +47,6 @@ public class Comment {
         this.text = text;
     }
 
-    public Float getScore() {
-        return score;
-    }
-
-    public void setScore(Float score) {
-        this.score = score;
-    }
-
     public Integer getLikes() {
         return likes;
     }
@@ -77,5 +69,13 @@ public class Comment {
 
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
     }
 }
