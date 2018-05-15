@@ -90,9 +90,7 @@ public class RestaurantController {
 
     @RequestMapping("admin/restaurant/{id}")
     String showRestaurant(@PathVariable Integer id, Model model) throws UnsupportedEncodingException {
-        int califs[] = {1,2,3,4,5};
         model.addAttribute("restaurant", restaurantService.getRestaurant(id));
-        model.addAttribute("calification",califs);
         List restaurantPhotos= new ArrayList();
         List<Photo> photos = (List<Photo>)photoService.listAllPhotosById(id);
         byte[] encodeBase64;
