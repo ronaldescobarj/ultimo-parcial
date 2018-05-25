@@ -20,7 +20,7 @@ public class Comment {
     @NotNull
     private Integer score;
 
-    private Integer likes;
+    private Integer likes=0;
 
     @ManyToOne()
     @JoinColumn(name = "user_id")

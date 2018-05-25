@@ -3,15 +3,15 @@ package com.ucbcba.demo.Controllers;
 import com.ucbcba.demo.entities.City;
 import com.ucbcba.demo.entities.Photo;
 import com.ucbcba.demo.entities.Restaurant;
-import com.ucbcba.demo.services.CategoryService;
-import com.ucbcba.demo.services.CityService;
-import com.ucbcba.demo.services.PhotoService;
-import com.ucbcba.demo.services.RestaurantService;
+import com.ucbcba.demo.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.stereotype.Controller;
 
@@ -40,6 +40,7 @@ public class RestaurantController {
     private CategoryService categoryService;
     private CityService cityService;
     private PhotoService photoService;
+    private UserService userService;
 
     @Autowired
     public void setRestaurantService(RestaurantService restaurantService) {
@@ -60,6 +61,12 @@ public class RestaurantController {
     public void setPhotoService(PhotoService photoService) {
         this.photoService = photoService;
     }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
 
     @RequestMapping(value = "admin/restaurants", method = RequestMethod.GET)
     public String listAllRestaurants(Model model) {
@@ -94,20 +101,24 @@ public class RestaurantController {
 
     @RequestMapping("admin/restaurant/{id}")
     String showRestaurant(@PathVariable Integer id, Model model) throws UnsupportedEncodingException {
-        model.addAttribute("restaurant", restaurantService.getRestaurant(id));
-        List restaurantPhotos= new ArrayList();
-        List<Photo> photos = (List<Photo>)photoService.listAllPhotosById(id);
-        byte[] encodeBase64;
-        String base64Encoded;
-        for(int i=0;i<photos.size();i++)
-        {
-            encodeBase64 = Base64.encode(photos.get(i).getPhoto());
-            base64Encoded = new String(encodeBase64,"UTF-8");
-            restaurantPhotos.add(base64Encoded);
+            model.addAttribute("restaurant", restaurantService.getRestaurant(id));
+            Integer califs[] = {1, 2, 3, 4, 5};
+            model.addAttribute("calification", califs);
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            model.addAttribute("user", userService.findByUsername(((User) auth.getPrincipal()).getUsername()));
+            List restaurantPhotos= new ArrayList();
+            List<Photo> photos = (List<Photo>)photoService.listAllPhotosById(id);
+            byte[] encodeBase64;
+            String base64Encoded;
+            for(int i=0;i<photos.size();i++)
+            {
+                encodeBase64 = Base64.encode(photos.get(i).getPhoto());
+                base64Encoded = new String(encodeBase64,"UTF-8");
+                restaurantPhotos.add(base64Encoded);
+            }
+            model.addAttribute("photos", restaurantPhotos );
+            return "ShowRestaurant";
         }
-        model.addAttribute("photos", restaurantPhotos );
-        return "ShowRestaurant";
-    }
 
     @RequestMapping(value = "admin/restaurant/edit/{id}")
     String editRestaurant(@PathVariable Integer id, Model model) throws UnsupportedEncodingException {
