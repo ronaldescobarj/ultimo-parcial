@@ -38,8 +38,29 @@
                 </div>
             </div>
 
+            <h4 class="bold">Comment: </h4>
+            <br></br>
+            <form action="/comment" method="post">
+                <input type="hidden" name="restaurant" id="restaurant" th:value="${restaurant.id}"></input>
+                <input type="hidden" name="user" id="user" th:value="${user.id}"></input>
+                <textarea name="text" id="text" cols="30" rows="1"></textarea>
+                <select name="score">
+                    <option id="score" name="score"  th:each="score:${calification}" th:value="${score}" th:text="${score}"></option>
+                </select>
+                <br></br>
+                <input type="submit" value="Comment"></input>
+            </form>
+            <br></br>
             <h4 class="bold">Comments: </h4>
+            <br></br>
+            <div th:each="comment : ${restaurant.comments}">
 
+                <label class="lead" th:text="${comment.text}"></label>
+                <br></br>
+                <label class="bold" th:text="${comment.user.username}"></label>
+                <span>Score: </span><span  th:text="${comment.score}"></span>
+                <br></br>
+            </div>
         </div>
 </body>
 </html>

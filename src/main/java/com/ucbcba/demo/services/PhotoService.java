@@ -13,5 +13,4 @@ public interface PhotoService {
     Photo getPhoto(Integer id);
 
     void deletePhoto(Integer id);
-
 }

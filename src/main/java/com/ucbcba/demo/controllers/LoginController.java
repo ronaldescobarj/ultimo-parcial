@@ -1,6 +1,7 @@
 package com.ucbcba.demo.controllers;
 
 import com.ucbcba.demo.entities.User;
+import com.ucbcba.demo.services.RestaurantService;
 import com.ucbcba.demo.services.SecurityService;
 import com.ucbcba.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,13 @@ public class LoginController {
     private final UserService userService;
 
     private final SecurityService securityService;
+
+    private RestaurantService restaurantService;
+
+    @Autowired
+    public void setRestaurantService(RestaurantService restaurantService) {
+        this.restaurantService = restaurantService;
+    }
 
     @Autowired
     public LoginController(UserService userService, SecurityService securityService) {
@@ -87,4 +95,15 @@ public class LoginController {
         return "login";
     }
 
+    @RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
+    public String welcome(Model model) {
+        Boolean logged = false;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!auth.getPrincipal().equals("anonymousUser")) {
+            logged = true;
+        }
+        model.addAttribute("logged", logged);
+        model.addAttribute("restaurants", restaurantService.listAllRestaurants());
+        return "home";
+    }
 }

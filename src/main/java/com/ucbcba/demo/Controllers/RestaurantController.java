@@ -3,15 +3,16 @@ package com.ucbcba.demo.controllers;
 import com.ucbcba.demo.entities.City;
 import com.ucbcba.demo.entities.Photo;
 import com.ucbcba.demo.entities.Restaurant;
-import com.ucbcba.demo.services.CategoryService;
-import com.ucbcba.demo.services.CityService;
-import com.ucbcba.demo.services.PhotoService;
-import com.ucbcba.demo.services.RestaurantService;
+import com.ucbcba.demo.entities.UserLike;
+import com.ucbcba.demo.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.stereotype.Controller;
 
@@ -40,6 +41,8 @@ public class RestaurantController {
     private CategoryService categoryService;
     private CityService cityService;
     private PhotoService photoService;
+    private UserLikesService userLikesService;
+    private UserService userService;
 
     @Autowired
     public void setRestaurantService(RestaurantService restaurantService) {
@@ -59,6 +62,16 @@ public class RestaurantController {
     @Autowired
     public void setPhotoService(PhotoService photoService) {
         this.photoService = photoService;
+    }
+
+    @Autowired
+    public void setUserLikeService(UserLikesService userLikesService) {
+        this.userLikesService = userLikesService;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
     @RequestMapping(value = "admin/restaurants", method = RequestMethod.GET)
@@ -94,20 +107,24 @@ public class RestaurantController {
 
     @RequestMapping("admin/restaurant/{id}")
     String showRestaurant(@PathVariable Integer id, Model model) throws UnsupportedEncodingException {
-        model.addAttribute("restaurant", restaurantService.getRestaurant(id));
-        List restaurantPhotos= new ArrayList();
-        List<Photo> photos = (List<Photo>)photoService.listAllPhotosById(id);
-        byte[] encodeBase64;
-        String base64Encoded;
-        for(int i=0;i<photos.size();i++)
-        {
-            encodeBase64 = Base64.encode(photos.get(i).getPhoto());
-            base64Encoded = new String(encodeBase64,"UTF-8");
-            restaurantPhotos.add(base64Encoded);
+            model.addAttribute("restaurant", restaurantService.getRestaurant(id));
+            Integer califs[] = {1, 2, 3, 4, 5};
+            model.addAttribute("calification", califs);
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            model.addAttribute("user", userService.findByUsername(((User) auth.getPrincipal()).getUsername()));
+            List restaurantPhotos= new ArrayList();
+            List<Photo> photos = (List<Photo>)photoService.listAllPhotosById(id);
+            byte[] encodeBase64;
+            String base64Encoded;
+            for(int i=0;i<photos.size();i++)
+            {
+                encodeBase64 = Base64.encode(photos.get(i).getPhoto());
+                base64Encoded = new String(encodeBase64,"UTF-8");
+                restaurantPhotos.add(base64Encoded);
+            }
+            model.addAttribute("photos", restaurantPhotos );
+            return "ShowRestaurant";
         }
-        model.addAttribute("photos", restaurantPhotos );
-        return "ShowRestaurant";
-    }
 
     @RequestMapping(value = "admin/restaurant/edit/{id}")
     String editRestaurant(@PathVariable Integer id, Model model) throws UnsupportedEncodingException {
@@ -135,12 +152,65 @@ public class RestaurantController {
         return "redirect:/admin/restaurants";
     }
 
-    @RequestMapping("/restaurant/delete/photo/{id}")
+    @RequestMapping("/admin/delete/photo/{id}")
     String deletePhoto(@PathVariable Integer id) {
         Photo photo = photoService.getPhoto(id);
         photoService.deletePhoto(id);
         return "redirect:/admin/restaurant/edit/"+ photo.getRestaurant().getId();
     }
 
+    @RequestMapping("restaurant/{id}")
+    String showRestaurantUser(@PathVariable Integer id, Model model) throws UnsupportedEncodingException {
+        Boolean logged = false;
+        Integer califs[] = {1, 2, 3, 4, 5};
+        model.addAttribute("calification", califs);
+        model.addAttribute("restaurant", restaurantService.getRestaurant(id));
+        Integer likes = userLikesService.getLikes(id);
+        model.addAttribute("likes", likes);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Boolean isLiked = false;
+        if (!auth.getPrincipal().equals("anonymousUser")) {
+            logged = true;
+            User u = (org.springframework.security.core.userdetails.User)auth.getPrincipal();
+            com.ucbcba.demo.entities.User user = userService.findByUsername(u.getUsername());
+            isLiked = userLikesService.isLiked(user.getId(), id);
+        }
+        model.addAttribute("isLiked", isLiked);
+        model.addAttribute("logged", logged);
+        List restaurantPhotos= new ArrayList();
+        List<Photo> photos = (List<Photo>)photoService.listAllPhotosById(id);
+        byte[] encodeBase64;
+        String base64Encoded;
+        for(int i=0;i<photos.size();i++)
+        {
+            encodeBase64 = Base64.encode(photos.get(i).getPhoto());
+            base64Encoded = new String(encodeBase64,"UTF-8");
+            restaurantPhotos.add(base64Encoded);
+        }
+        model.addAttribute("photos", restaurantPhotos );
+        return "restaurantUserView";
+    }
 
+    @RequestMapping(value = "/restaurant/like/{restaurantId}")
+    public String like(@PathVariable Integer restaurantId) {
+        UserLike ul = new UserLike();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User u = (org.springframework.security.core.userdetails.User)auth.getPrincipal();
+        com.ucbcba.demo.entities.User user = userService.findByUsername(u.getUsername());
+        ul.setUser(user);
+        Restaurant r = restaurantService.getRestaurant(restaurantId);
+        ul.setRestaurant(r);
+        userLikesService.saveUserLike(ul);
+        System.out.println("entra");
+        return "redirect:/restaurant/" + restaurantId;
+    }
+
+    @RequestMapping(value = "/restaurant/dislike/{restaurantId}")
+    public String dislike(@PathVariable Integer restaurantId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User u = (org.springframework.security.core.userdetails.User)auth.getPrincipal();
+        com.ucbcba.demo.entities.User user = userService.findByUsername(u.getUsername());
+        userLikesService.deleteUserLike(user.getId(), restaurantId);
+        return "redirect:/restaurant/" + restaurantId;
+    }
 }

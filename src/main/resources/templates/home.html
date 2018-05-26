@@ -198,12 +198,14 @@
                 </div>
                 <div class="text-left">
                     <div class="fh5co-menu-2">
-                        <a href="/registration" data-nav-section="menu">
+                        <a th:if="${!logged}" href="/registration" data-nav-section="menu">
                             <button class="button">Register</button>
                         </a>
-                        <a href="/login" data-nav-section="events">
+                        <a th:if="${!logged}" href="/login" data-nav-section="events">
                             <button class="button">Login</button>
                         </a>
+                        <button th:if="${logged}" class="button" onclick="window.location.href='/logout'">Logout
+                        </button>
                     </div>
                 </div>
             </div>
@@ -260,7 +262,7 @@
             </tr>
 
             <tr th:each="restaurant : ${restaurants}">
-                <td th:text="${restaurant.name}">
+                <td><a th:text="${restaurant.name}" th:href="${'/restaurant/' + restaurant.id}"></a>
                 </td>
                 <td th:text="${restaurant.description}">
                 </td>
@@ -268,36 +270,34 @@
                 </td>
                 <td th:text="${restaurant.likes}">
                 </td>
-            </tr>
-        </table>
-        <script>
-            function filterDataTable() {
-                var input, filter, table, tr, td;
-                input = document.getElementById("cityDropdown");
-                filter = input.options[input.selectedIndex].value.toUpperCase();
-                table = document.getElementById("dataTable");
-                tr = table.getElementsByTagName("tr");
-                /*<![CDATA[*/
-                for (var i = 0; i < tr.length; i++) {
-                    td = tr[i].getElementsByTagName("td")[2];
-                    if (!(filter === "ALL CITIES")) {
-                        if (td) {
-                            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                                tr[i].style.display = "";
-                            } else {
-                                tr[i].style.display = "none";
+                <script>
+                    function filterDataTable() {
+                        var input, filter, table, tr, td;
+                        input = document.getElementById("cityDropdown");
+                        filter = input.options[input.selectedIndex].value.toUpperCase();
+                        table = document.getElementById("dataTable");
+                        tr = table.getElementsByTagName("tr");
+                        /*<![CDATA[*/
+                        for (var i = 0; i < tr.length; i++) {
+                            td = tr[i].getElementsByTagName("td")[2];
+                            if (!(filter === "ALL CITIES")) {
+                                if (td) {
+                                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                                        tr[i].style.display = "";
+                                    } else {
+                                        tr[i].style.display = "none";
+                                    }
+                                }
                             }
+                            else {
+                                if (td) {
+                                    tr[i].style.display = "";
+                                }
+                            }
+                            /*]]>*/
                         }
                     }
-                    else {
-                        if (td) {
-                            tr[i].style.display = "";
-                        }
-                    }
-                    /*]]>*/
-                }
-            }
-        </script>
+                </script>
     </div>
 </div>
 <div class="footer">
