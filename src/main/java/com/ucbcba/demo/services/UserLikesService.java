@@ -11,8 +11,10 @@ public interface UserLikesService {
 
     UserLike getUserLike(Integer id);
 
-    Boolean thisUserDidLike(Long id);
+    Boolean isLiked(Long userId, Integer restaurantId);
 
-    void deleteUserLike(Integer id);
+    void deleteUserLike(Long userId, Integer restaurantId);
+
+    Integer getLikes(Integer restaurantId);
 
 }

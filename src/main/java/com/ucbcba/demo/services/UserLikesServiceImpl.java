@@ -36,20 +36,41 @@ public class UserLikesServiceImpl implements UserLikesService {
     }
 
     @Override
-    public Boolean thisUserDidLike(Long id) {
-        List<UserLike> users;
+    public Boolean isLiked(Long userId, Integer restaurantId) {
+        List<UserLike> usersLike;
         Boolean res = false;
-        users = (List<UserLike>)userLikesRepository.findAll();
-        for(int i=0;i<users.size();i++)
+        usersLike = (List<UserLike>)userLikesRepository.findAll();
+        for(int i=0;i<usersLike.size();i++)
         {
-            if(users.get(i).getUser().getId() == id)
+            if (usersLike.get(i).getUser().getId() == userId && usersLike.get(i).getRestaurant().getId() == restaurantId)
                 res=true;
         }
         return res;
     }
 
     @Override
-    public void deleteUserLike(Integer id) {
-        userLikesRepository.delete(id);
+    public void deleteUserLike(Long userId, Integer restaurantId) {
+        List<UserLike> usersLike;
+        usersLike = (List<UserLike>)userLikesRepository.findAll();
+        for(int i=0;i<usersLike.size();i++)
+        {
+            if (usersLike.get(i).getUser().getId() == userId && usersLike.get(i).getRestaurant().getId() == restaurantId) {
+                userLikesRepository.delete(usersLike.get(i).getId());
+            }
+        }
+    }
+
+    @Override
+    public Integer getLikes(Integer restaurantId) {
+        List<UserLike> usersLike;
+        usersLike = (List<UserLike>)userLikesRepository.findAll();
+        Integer count = 0;
+        for(int i = 0; i < usersLike.size(); i++)
+        {
+            if (usersLike.get(i).getRestaurant().getId() == restaurantId) {
+                count++;
+            }
+        }
+        return count;
     }
 }
