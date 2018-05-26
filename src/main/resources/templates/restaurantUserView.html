@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+    <title>Restaurants</title>
+
+</head>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+<body>
+<div class="container">
+    <div class="jumbotron" align="center">
+        <h1 th:text="${restaurant.name}" text-transform="uppercase"></h1>
+    </div>
+
+    <p class="lead" th:text="${restaurant.description}" align="center"></p>
+
+    <h4 class="bold">Photos: </h4>
+
+    <div class="row marketing">
+        <div class="col-lg-6" th:each="photo : ${photos}" >
+            <img th:src= "@{'data:image/jpg;base64,' +  ${photo}}" width="400"/>
+        </div>
+    </div>
+
+    <div class="row marketing">
+        <div class="col-lg-6">
+            <h4 class="bold">Categories: </h4>
+            <div th:each="category: ${restaurant.categories}">
+                <p class="lead" th:text="${category.name}"></p>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <h4 class="bold">City: </h4>
+            <p class="lead" th:text="${restaurant.city.name}"></p>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <p>Likes</p>
+        <p th:text="${likes}"></p>
+        <div th:if="${logged}">
+            <a th:href="${'/restaurant/like/' + restaurant.id}" th:if="${!isLiked}">Like</a>
+            <a th:href="${'/restaurant/dislike/' + restaurant.id}" th:if="${isLiked}">Dislike</a>
+        </div>
+        <div th:if="${!logged}">
+            <p>You must be logged in to like or dislike the restaurant</p>
+        </div>
+    </div>
+
+<div th:if="${logged}">
+    <h4 class="bold">Comment: </h4>
+    <br></br>
+    <form action="/comment" method="post">
+        <input type="hidden" name="restaurant" id="restaurant" th:value="${restaurant.id}"></input>
+        <textarea name="text" id="text" cols="30" rows="1"></textarea>
+        <select name="score">
+            <option id="score" name="score"  th:each="score:${calification}" th:value="${score}" th:text="${score}"></option>
+        </select>
+        <br></br>
+        <input type="submit" value="Comment"></input>
+    </form>
+</div>
+    <div th:if="${!logged}">
+        <p>You must be logged in to comment the restaurant</p>
+    </div>
+
+    <br></br>
+    <h4 class="bold">Comments: </h4>
+    <br></br>
+    <div th:each="comment : ${restaurant.comments}">
+
+        <label class="lead" th:text="${comment.text}"></label>
+        <br></br>
+        <label class="bold" th:text="${comment.user.username}"></label>
+        <span>Score: </span><span  th:text="${comment.score}"></span>
+        <br></br>
+    </div>
+
+</div>
+</body>
+</html>
