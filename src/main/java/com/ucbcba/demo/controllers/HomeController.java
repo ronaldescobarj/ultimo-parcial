@@ -38,6 +38,7 @@ public class HomeController {
             logged = true;
         }
         model.addAttribute("logged", logged);
+        model.addAttribute("cities", cityService.listAllCities());
         model.addAttribute("restaurants", restaurantService.listAllRestaurants());
         return "home";
     }
@@ -54,6 +55,12 @@ public class HomeController {
                         || searchCategories(p.getCategories(), searchFilter.toLowerCase()))
         ).collect(Collectors.toList());
 
+        Boolean logged = false;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!auth.getPrincipal().equals("anonymousUser")) {
+            logged = true;
+        }
+        model.addAttribute("logged", logged);
         model.addAttribute("restaurants", restaurants);
         model.addAttribute("cities", cityService.listAllCities());
         return "home";

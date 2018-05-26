@@ -178,6 +178,8 @@
             color: white;
             text-align: center;
         }
+
+
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
 </head>
@@ -253,12 +255,6 @@
                 <th>
                     City
                 </th>
-                <th>
-                    Likes
-                </th>
-                <th>
-                    Rating
-                </th>
             </tr>
 
             <tr th:each="restaurant : ${restaurants}">
@@ -267,8 +263,6 @@
                 <td th:text="${restaurant.description}">
                 </td>
                 <td th:text="${restaurant.getCity().name}">
-                </td>
-                <td th:text="${restaurant.likes}">
                 </td>
             </tr>
         </table>
@@ -299,6 +293,8 @@
                     /*]]>*/
                 }
             }
+
+
         </script>
     </div>
 </div>
