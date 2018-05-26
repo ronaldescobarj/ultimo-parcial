@@ -270,34 +270,36 @@
                 </td>
                 <td th:text="${restaurant.likes}">
                 </td>
-                <script>
-                    function filterDataTable() {
-                        var input, filter, table, tr, td;
-                        input = document.getElementById("cityDropdown");
-                        filter = input.options[input.selectedIndex].value.toUpperCase();
-                        table = document.getElementById("dataTable");
-                        tr = table.getElementsByTagName("tr");
-                        /*<![CDATA[*/
-                        for (var i = 0; i < tr.length; i++) {
-                            td = tr[i].getElementsByTagName("td")[2];
-                            if (!(filter === "ALL CITIES")) {
-                                if (td) {
-                                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                                        tr[i].style.display = "";
-                                    } else {
-                                        tr[i].style.display = "none";
-                                    }
-                                }
+            </tr>
+        </table>
+        <script>
+            function filterDataTable() {
+                var input, filter, table, tr, td;
+                input = document.getElementById("cityDropdown");
+                filter = input.options[input.selectedIndex].value.toUpperCase();
+                table = document.getElementById("dataTable");
+                tr = table.getElementsByTagName("tr");
+                /*<![CDATA[*/
+                for (var i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[2];
+                    if (!(filter === "ALL CITIES")) {
+                        if (td) {
+                            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                                tr[i].style.display = "";
+                            } else {
+                                tr[i].style.display = "none";
                             }
-                            else {
-                                if (td) {
-                                    tr[i].style.display = "";
-                                }
-                            }
-                            /*]]>*/
                         }
                     }
-                </script>
+                    else {
+                        if (td) {
+                            tr[i].style.display = "";
+                        }
+                    }
+                    /*]]>*/
+                }
+            }
+        </script>
     </div>
 </div>
 <div class="footer">

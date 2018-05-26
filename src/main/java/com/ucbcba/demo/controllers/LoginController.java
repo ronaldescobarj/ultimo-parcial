@@ -95,15 +95,4 @@ public class LoginController {
         return "login";
     }
 
-    @RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
-    public String welcome(Model model) {
-        Boolean logged = false;
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!auth.getPrincipal().equals("anonymousUser")) {
-            logged = true;
-        }
-        model.addAttribute("logged", logged);
-        model.addAttribute("restaurants", restaurantService.listAllRestaurants());
-        return "home";
-    }
 }

@@ -5,6 +5,8 @@ import com.ucbcba.demo.entities.Restaurant;
 import com.ucbcba.demo.services.CityService;
 import com.ucbcba.demo.services.RestaurantService;
 import com.ucbcba.demo.services.UserService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,9 +31,14 @@ public class HomeController {
     }
 
     @RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
-    public String home(Model model) {
+    public String welcome(Model model) {
+        Boolean logged = false;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!auth.getPrincipal().equals("anonymousUser")) {
+            logged = true;
+        }
+        model.addAttribute("logged", logged);
         model.addAttribute("restaurants", restaurantService.listAllRestaurants());
-        model.addAttribute("cities", cityService.listAllCities());
         return "home";
     }
 
