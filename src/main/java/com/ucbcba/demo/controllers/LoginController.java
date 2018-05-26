@@ -1,4 +1,4 @@
-package com.ucbcba.demo.Controllers;
+package com.ucbcba.demo.controllers;
 
 import com.ucbcba.demo.entities.User;
 import com.ucbcba.demo.services.SecurityService;
@@ -87,8 +87,4 @@ public class LoginController {
         return "login";
     }
 
-    @RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
-    public String welcome(Model model) {
-        return "home";
-    }
 }

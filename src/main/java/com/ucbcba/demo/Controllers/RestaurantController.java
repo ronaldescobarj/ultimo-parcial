@@ -1,4 +1,4 @@
-package com.ucbcba.demo.Controllers;
+package com.ucbcba.demo.controllers;
 
 import com.ucbcba.demo.entities.City;
 import com.ucbcba.demo.entities.Photo;

@@ -179,6 +179,7 @@
             text-align: center;
         }
     </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
 </head>
 <body>
 
@@ -193,7 +194,7 @@
                     </a>
                 </div>
                 <div class="fh5co-logo">
-                    <a href="home.html">Tri Hotel</a>
+                    <a href="/home">Tri Hotel</a>
                 </div>
                 <div class="text-left">
                     <div class="fh5co-menu-2">
@@ -212,85 +213,91 @@
     <div>
         <ul>
             <li>
-                <a><input class="form-control my-0 py-1" type="text" placeholder="Search..." aria-label="Search"/> </a>
+                <form th:action="@{/search}" method="post">
+                    <input id="searchFilter" name="searchFilter" style="display:inline;" class="form-control my-0 py-1"
+                           type="text"
+                           placeholder="Search by category or name" aria-label="Search"/>
+                    <input class="btn btn-default" type="submit" style="display:inline;" value="Search"/>
+                </form>
+            </li>
+            <li>
+                <a>
+                    <button class="btn btn-default">Table</button>
+                </a>
+            </li>
+            <li>
+                <a>
+                    <button class="btn btn-default">Map</button>
+                </a>
             </li>
 
-            <li><a>
-                <button class="btn btn-default">Table</button>
-            </a></li>
-            <li><a>
-                <button class="btn btn-default">Map</button>
-            </a></li>
-
-            <li><a>
-                <select class="btn btn-default">
-                    <option value="Cochabamba">Cochabamba</option>
-                    <option value="La Paz">La Paz</option>
-                    <option value="Tarija">Tarija</option>
-                    <option value="Santa Cruz">Santa Cruz</option>
+            <li>
+                <select class="btn btn-default" id="cityDropdown" onchange="filterDataTable()">
+                    <option value="All cities">All cities</option>
+                    <option th:each="city : ${cities}" th:value="${city.name}" th:text="${city.name}"></option>
                 </select>
-            </a>
             </li>
         </ul>
     </div>
     <div id="block1">
-        <table>
+        <table id="dataTable">
             <tr>
-                <th>Name</th>
-                <th>Address</th>
-                <th>Category</th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    City
+                </th>
+                <th>
+                    Likes
+                </th>
+                <th>
+                    Rating
+                </th>
             </tr>
-            <tr>
-                <td>Kentucky Fried Chicken</td>
-                <td>Pando</td>
-                <td>***</td>
-            </tr>
-            <tr>
-                <td>Lousiana Fries Chicken</td>
-                <td>Melchor Perez</td>
-                <td>****</td>
-            </tr>
-            <tr>
-                <td>Burger King</td>
-                <td>Prado</td>
-                <td>***</td>
-            </tr>
-            <tr>
-                <td>Mc Donalds</td>
-                <td>Plazuela Colon</td>
-                <td>***</td>
-            </tr>
-            <tr>
-                <td>Hooters</td>
-                <td>C.La Paz</td>
-                <td>**</td>
-            </tr>
-            <tr>
-                <td>Taco Bell</td>
-                <td>C. Mexico</td>
-                <td>**</td>
-            </tr>
-            <tr>
-                <td>Fridays</td>
-                <td>C. Ramon Rivero</td>
-                <td>***</td>
-            </tr>
-            <tr>
-                <td>Tuesdays</td>
-                <td>C. Pando</td>
-                <td>***</td>
-            </tr>
-            <tr>
-                <td>Paprika</td>
-                <td>C. Chuquisaca</td>
-                <td>****</td>
-            </tr>
-            <tr>
-                <td>Cayenna</td>
-                <td>C. Lincoln</td>
-                <td>**</td>
+
+            <tr th:each="restaurant : ${restaurants}">
+                <td th:text="${restaurant.name}">
+                </td>
+                <td th:text="${restaurant.description}">
+                </td>
+                <td th:text="${restaurant.getCity().name}">
+                </td>
+                <td th:text="${restaurant.likes}">
+                </td>
             </tr>
         </table>
+        <script>
+            function filterDataTable() {
+                var input, filter, table, tr, td;
+                input = document.getElementById("cityDropdown");
+                filter = input.options[input.selectedIndex].value.toUpperCase();
+                table = document.getElementById("dataTable");
+                tr = table.getElementsByTagName("tr");
+                /*<![CDATA[*/
+                for (var i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[2];
+                    if (!(filter === "ALL CITIES")) {
+                        if (td) {
+                            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                                tr[i].style.display = "";
+                            } else {
+                                tr[i].style.display = "none";
+                            }
+                        }
+                    }
+                    else {
+                        if (td) {
+                            tr[i].style.display = "";
+                        }
+                    }
+                    /*]]>*/
+                }
+            }
+        </script>
     </div>
 </div>
 <div class="footer">

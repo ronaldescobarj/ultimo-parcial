@@ -1,4 +1,4 @@
-package com.ucbcba.demo.Controllers;
+package com.ucbcba.demo.controllers;
 
 import com.ucbcba.demo.entities.Comment;
 import com.ucbcba.demo.services.CommentService;
