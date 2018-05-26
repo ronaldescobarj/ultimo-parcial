@@ -18,8 +18,10 @@ public class Comment {
     private String text;
 
     @NotNull
+    @Column(columnDefinition = "int(11) default 0")
     private Integer score;
 
+    @Column(columnDefinition = "int(11) default 0")
     private Integer likes=0;
 
     @ManyToOne()
@@ -29,6 +31,14 @@ public class Comment {
     @ManyToOne()
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
+
+    public Comment(){
+    }
+
+    public Comment(Restaurant restaurant, User user){
+        this.restaurant=restaurant;
+        this.user=user;
+    }
 
     public Integer getId() {
         return id;

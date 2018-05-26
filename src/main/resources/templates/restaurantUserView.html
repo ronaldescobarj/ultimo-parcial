@@ -61,14 +61,18 @@
     <div th:if="${logged}">
         <h4 class="bold">Comment: </h4>
         <br></br>
-        <form action="/comment" method="post">
-            <input type="hidden" name="restaurant" id="restaurant" th:value="${restaurant.id}"></input>
-            <textarea name="text" id="text" cols="30" rows="1"></textarea>
-            <select name="score">
-                <option id="score" name="score"  th:each="score:${calification}" th:value="${score}" th:text="${score}"></option>
+        <form action="#"  th:object="${comment}" th:action="@{/comment}" method="post">
+            <input type="hidden" th:value="${restaurant.id}" th:field="*{restaurant}"/>
+            <input type="hidden" th:value="${user.id}" th:field="*{user}"/><label th:if="${#fields.hasErrors('user')}" th:errors="*{user}" class="validation-message">Errors</label>
+            <input type="text" th:field="*{text}"/>
+            <select th:field="*{score}">
+                <option th:each="score:${calification}" th:value="${score}" th:text="${score}"></option>
             </select>
             <br></br>
             <input type="submit" value="Comment"></input>
+            <div th:if="${userCommented}">
+                <label th:text="${commentError}"></label>
+            </div>
         </form>
     </div>
 
