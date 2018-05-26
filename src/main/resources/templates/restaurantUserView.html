@@ -12,6 +12,24 @@
 <div class="container">
     <div class="jumbotron" align="center">
         <h1 th:text="${restaurant.name}" text-transform="uppercase"></h1>
+        <div class="row marketing">
+            <div class="col-lg-6">
+                <label class="lead">Likes: </label>
+                <label class="lead" th:text="${likes}"></label>
+                <div th:if="${logged}">
+                    <a th:href="${'/restaurant/like/' + restaurant.id}" th:if="${!isLiked}">Like</a>
+                    <a th:href="${'/restaurant/dislike/' + restaurant.id}" th:if="${isLiked}">Dislike</a>
+                </div>
+                <div th:if="${!logged}">
+                    <label>You must be logged in to like or dislike the restaurant</label>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <label class="lead">Score: </label>
+                <label class="lead" th:text="${averageScore}"></label>
+            </div>
+        </div>
     </div>
 
     <p class="lead" th:text="${restaurant.description}" align="center"></p>
@@ -38,31 +56,22 @@
         </div>
     </div>
 
-    <div class="col-lg-6">
-        <p>Likes</p>
-        <p th:text="${likes}"></p>
-        <div th:if="${logged}">
-            <a th:href="${'/restaurant/like/' + restaurant.id}" th:if="${!isLiked}">Like</a>
-            <a th:href="${'/restaurant/dislike/' + restaurant.id}" th:if="${isLiked}">Dislike</a>
-        </div>
-        <div th:if="${!logged}">
-            <p>You must be logged in to like or dislike the restaurant</p>
-        </div>
+
+
+    <div th:if="${logged}">
+        <h4 class="bold">Comment: </h4>
+        <br></br>
+        <form action="/comment" method="post">
+            <input type="hidden" name="restaurant" id="restaurant" th:value="${restaurant.id}"></input>
+            <textarea name="text" id="text" cols="30" rows="1"></textarea>
+            <select name="score">
+                <option id="score" name="score"  th:each="score:${calification}" th:value="${score}" th:text="${score}"></option>
+            </select>
+            <br></br>
+            <input type="submit" value="Comment"></input>
+        </form>
     </div>
 
-<div th:if="${logged}">
-    <h4 class="bold">Comment: </h4>
-    <br></br>
-    <form action="/comment" method="post">
-        <input type="hidden" name="restaurant" id="restaurant" th:value="${restaurant.id}"></input>
-        <textarea name="text" id="text" cols="30" rows="1"></textarea>
-        <select name="score">
-            <option id="score" name="score"  th:each="score:${calification}" th:value="${score}" th:text="${score}"></option>
-        </select>
-        <br></br>
-        <input type="submit" value="Comment"></input>
-    </form>
-</div>
     <div th:if="${!logged}">
         <p>You must be logged in to comment the restaurant</p>
     </div>
