@@ -42,8 +42,13 @@
     <div class="col-lg-6">
         <p>Likes</p>
         <p th:text="${likes}"></p>
-        <a th:href="${'/restaurant/like/' + restaurant.id}" th:if="${!isLiked}">Like</a>
-        <a th:href="${'/restaurant/dislike/' + restaurant.id}" th:if="${isLiked}">Dislike</a>
+        <div th:if="${logged}">
+            <a th:href="${'/restaurant/like/' + restaurant.id}" th:if="${!isLiked}">Like</a>
+            <a th:href="${'/restaurant/dislike/' + restaurant.id}" th:if="${isLiked}">Dislike</a>
+        </div>
+        <div th:if="${!logged}">
+            <p>You must be logged in to like or dislike the restaurant</p>
+        </div>
     </div>
 </div>
 </body>

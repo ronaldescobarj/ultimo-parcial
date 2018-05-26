@@ -148,7 +148,7 @@ public class RestaurantController {
         return "redirect:/admin/restaurants";
     }
 
-    @RequestMapping("/restaurant/delete/photo/{id}")
+    @RequestMapping("/admin/delete/photo/{id}")
     String deletePhoto(@PathVariable Integer id) {
         Photo photo = photoService.getPhoto(id);
         photoService.deletePhoto(id);
@@ -157,14 +157,19 @@ public class RestaurantController {
 
     @RequestMapping("restaurant/{id}")
     String showRestaurantUser(@PathVariable Integer id, Model model) throws UnsupportedEncodingException {
+        Boolean logged = false;
         model.addAttribute("restaurant", restaurantService.getRestaurant(id));
         Integer likes = userLikesService.getLikes(id);
         model.addAttribute("likes", likes);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User u = (org.springframework.security.core.userdetails.User)auth.getPrincipal();
-        com.ucbcba.demo.entities.User user = userService.findByUsername(u.getUsername());
-        Boolean isLiked = userLikesService.isLiked(user.getId(), id);
-        model.addAttribute("isLiked", isLiked);
+        if (!auth.getPrincipal().equals("anonymousUser")) {
+            logged = true;
+            User u = (org.springframework.security.core.userdetails.User)auth.getPrincipal();
+            com.ucbcba.demo.entities.User user = userService.findByUsername(u.getUsername());
+            Boolean isLiked = userLikesService.isLiked(user.getId(), id);
+            model.addAttribute("isLiked", isLiked);
+        }
+        model.addAttribute("logged", logged);
         List restaurantPhotos= new ArrayList();
         List<Photo> photos = (List<Photo>)photoService.listAllPhotosById(id);
         byte[] encodeBase64;
