@@ -196,7 +196,7 @@
                     </a>
                 </div>
                 <div class="fh5co-logo">
-                    <a href="/home">Tri Hotel</a>
+                    <a>Tri Hotel</a>
                 </div>
                 <div class="text-left">
                     <div class="fh5co-menu-2">
@@ -206,8 +206,9 @@
                         <a th:if="${!logged}" href="/login" data-nav-section="events">
                             <button class="button">Login</button>
                         </a>
-                        <button th:if="${logged}" class="button" onclick="window.location.href='/logout'">Logout
-                        </button>
+                        <a th:if="${logged}" href="/logout" data-nav-section="menu">
+                            <button class="button">Logout</button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -219,7 +220,7 @@
             <li>
                 <form th:action="@{/search}" method="post">
                     <input id="searchFilter" name="searchFilter" style="display:inline;" class="form-control my-0 py-1"
-                           type="text"
+                           type="text" th:value="${searchFilter}"
                            placeholder="Search by category or name" aria-label="Search"/>
                     <input class="btn btn-default" type="submit" style="display:inline;" value="Search"/>
                 </form>
@@ -236,10 +237,12 @@
             </li>
 
             <li>
-                <select class="btn btn-default" id="cityDropdown" onchange="filterDataTable()">
-                    <option value="All cities">All cities</option>
-                    <option th:each="city : ${cities}" th:value="${city.name}" th:text="${city.name}"></option>
-                </select>
+                <a>
+                    <select class="btn btn-default" id="cityDropdown" onchange="filterDataTable()">
+                        <option value="All cities">All cities</option>
+                        <option th:each="city : ${cities}" th:value="${city.name}" th:text="${city.name}"></option>
+                    </select>
+                </a>
             </li>
         </ul>
     </div>

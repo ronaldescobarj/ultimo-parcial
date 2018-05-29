@@ -89,8 +89,7 @@ public class RestaurantController {
     public String saveRestaurant(Restaurant restaurant, @RequestParam("file") MultipartFile[] files) throws IOException {
         restaurantService.saveRestaurant(restaurant);
         byte[] pixel;
-        for(int i=0;i<files.length;i++)
-        {
+        for (int i = 0; i < files.length; i++) {
             if (!files[i].isEmpty()) {
                 pixel = files[i].getBytes();
                 Photo photo = new Photo();
@@ -106,28 +105,30 @@ public class RestaurantController {
     String showRestaurant(@PathVariable Integer id, Model model) throws UnsupportedEncodingException {
         model.addAttribute("restaurant", restaurantService.getRestaurant(id));
         Integer califs[] = {1, 2, 3, 4, 5};
-        Integer average=0;
-        List<Comment> comments=restaurantService.getRestaurant(id).getComments();
-        for(int i=0;i<comments.size();i++) {
-            average=average+comments.get(i).getScore();
+        Integer average = 0;
+        List<Comment> comments = restaurantService.getRestaurant(id).getComments();
+        for (Comment comment : comments) {
+            average = average + comment.getScore();
         }
         model.addAttribute("calification", califs);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("user", userService.findByUsername(((User) auth.getPrincipal()).getUsername()));
-        model.addAttribute("averageScore", (average/comments.size()));
-        List restaurantPhotos= new ArrayList();
+        Integer averageScore = 0;
+        if (comments.size() != 0)
+            averageScore = average / comments.size();
+        model.addAttribute("averageScore", averageScore);
+        List restaurantPhotos = new ArrayList();
         Integer likes = userLikesService.getLikes(id);
         model.addAttribute("likes", likes);
-        List<Photo> photos = (List<Photo>)photoService.listAllPhotosById(id);
+        List<Photo> photos = (List<Photo>) photoService.listAllPhotosById(id);
         byte[] encodeBase64;
         String base64Encoded;
-        for(int i=0;i<photos.size();i++)
-        {
-            encodeBase64 = Base64.encode(photos.get(i).getPhoto());
-            base64Encoded = new String(encodeBase64,"UTF-8");
+        for (Photo photo : photos) {
+            encodeBase64 = Base64.encode(photo.getPhoto());
+            base64Encoded = new String(encodeBase64, "UTF-8");
             restaurantPhotos.add(base64Encoded);
         }
-        model.addAttribute("photos", restaurantPhotos );
+        model.addAttribute("photos", restaurantPhotos);
         return "ShowRestaurant";
     }
 
@@ -136,18 +137,17 @@ public class RestaurantController {
         model.addAttribute("restaurant", restaurantService.getRestaurant(id));
         model.addAttribute("restaurantCategories", categoryService.listAllCategories());
         model.addAttribute("cities", cityService.listAllCities());
-        List restaurantPhotos= new ArrayList();
-        List<Photo> photos = (List<Photo>)photoService.listAllPhotosById(id);
+        List restaurantPhotos = new ArrayList();
+        List<Photo> photos = (List<Photo>) photoService.listAllPhotosById(id);
         byte[] encodeBase64;
         String base64Encoded;
-        for(int i=0;i<photos.size();i++)
-        {
+        for (int i = 0; i < photos.size(); i++) {
             encodeBase64 = Base64.encode(photos.get(i).getPhoto());
-            base64Encoded = new String(encodeBase64,"UTF-8");
+            base64Encoded = new String(encodeBase64, "UTF-8");
             restaurantPhotos.add(base64Encoded);
         }
-        model.addAttribute("photos", restaurantPhotos );
-        model.addAttribute("images",photoService.listAllPhotosById(id));
+        model.addAttribute("photos", restaurantPhotos);
+        model.addAttribute("images", photoService.listAllPhotosById(id));
         return "restaurantForm";
     }
 
@@ -161,7 +161,7 @@ public class RestaurantController {
     String deletePhoto(@PathVariable Integer id) {
         Photo photo = photoService.getPhoto(id);
         photoService.deletePhoto(id);
-        return "redirect:/admin/restaurant/edit/"+ photo.getRestaurant().getId();
+        return "redirect:/admin/restaurant/edit/" + photo.getRestaurant().getId();
     }
 
     @RequestMapping("restaurant/{id}")
@@ -169,12 +169,15 @@ public class RestaurantController {
         Boolean logged = false;
         Integer califs[] = {1, 2, 3, 4, 5};
         model.addAttribute("calification", califs);
-        Integer average=0;
-        List<Comment> comments=restaurantService.getRestaurant(id).getComments();
-        for(int i=0;i<comments.size();i++) {
-            average=average+comments.get(i).getScore();
+        Integer average = 0;
+        List<Comment> comments = restaurantService.getRestaurant(id).getComments();
+        for (Comment comment : comments) {
+            average = average + comment.getScore();
         }
-        model.addAttribute("averageScore", (average/comments.size()));
+        Integer averageScore = 0;
+        if (comments.size() != 0)
+            averageScore = average / comments.size();
+        model.addAttribute("averageScore", averageScore);
         model.addAttribute("restaurant", restaurantService.getRestaurant(id));
         Integer likes = userLikesService.getLikes(id);
         model.addAttribute("likes", likes);
@@ -182,23 +185,22 @@ public class RestaurantController {
         Boolean isLiked = false;
         if (!auth.getPrincipal().equals("anonymousUser")) {
             logged = true;
-            User u = (org.springframework.security.core.userdetails.User)auth.getPrincipal();
+            User u = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
             com.ucbcba.demo.entities.User user = userService.findByUsername(u.getUsername());
             isLiked = userLikesService.isLiked(user.getId(), id);
         }
         model.addAttribute("isLiked", isLiked);
         model.addAttribute("logged", logged);
-        List restaurantPhotos= new ArrayList();
-        List<Photo> photos = (List<Photo>)photoService.listAllPhotosById(id);
+        List restaurantPhotos = new ArrayList();
+        List<Photo> photos = (List<Photo>) photoService.listAllPhotosById(id);
         byte[] encodeBase64;
         String base64Encoded;
-        for(int i=0;i<photos.size();i++)
-        {
+        for (int i = 0; i < photos.size(); i++) {
             encodeBase64 = Base64.encode(photos.get(i).getPhoto());
-            base64Encoded = new String(encodeBase64,"UTF-8");
+            base64Encoded = new String(encodeBase64, "UTF-8");
             restaurantPhotos.add(base64Encoded);
         }
-        model.addAttribute("photos", restaurantPhotos );
+        model.addAttribute("photos", restaurantPhotos);
         return "restaurantUserView";
     }
 
@@ -206,7 +208,7 @@ public class RestaurantController {
     public String like(@PathVariable Integer restaurantId) {
         UserLike ul = new UserLike();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User u = (org.springframework.security.core.userdetails.User)auth.getPrincipal();
+        User u = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
         com.ucbcba.demo.entities.User user = userService.findByUsername(u.getUsername());
         ul.setUser(user);
         Restaurant r = restaurantService.getRestaurant(restaurantId);
@@ -219,7 +221,7 @@ public class RestaurantController {
     @RequestMapping(value = "/restaurant/dislike/{restaurantId}")
     public String dislike(@PathVariable Integer restaurantId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User u = (org.springframework.security.core.userdetails.User)auth.getPrincipal();
+        User u = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
         com.ucbcba.demo.entities.User user = userService.findByUsername(u.getUsername());
         userLikesService.deleteUserLike(user.getId(), restaurantId);
         return "redirect:/restaurant/" + restaurantId;

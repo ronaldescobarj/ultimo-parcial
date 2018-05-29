@@ -40,6 +40,7 @@ public class HomeController {
         model.addAttribute("logged", logged);
         model.addAttribute("cities", cityService.listAllCities());
         model.addAttribute("restaurants", restaurantService.listAllRestaurants());
+        model.addAttribute("searchFilter", "");
         return "home";
     }
 
@@ -62,6 +63,7 @@ public class HomeController {
         }
         model.addAttribute("logged", logged);
         model.addAttribute("restaurants", restaurants);
+        model.addAttribute("searchFilter", searchFilter);
         model.addAttribute("cities", cityService.listAllCities());
         return "home";
     }
