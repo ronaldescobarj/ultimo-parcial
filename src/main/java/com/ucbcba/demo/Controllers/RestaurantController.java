@@ -190,7 +190,6 @@ public class RestaurantController {
         if (!auth.getPrincipal().equals("anonymousUser")) {
             user=userService.findByUsername(((User) auth.getPrincipal()).getUsername());
             logged = true;
-            User u = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
             isLiked = userLikesService.isLiked(user.getId(), id);
             model.addAttribute("user",user);
             model.addAttribute("comment", new Comment(restaurant, user));
@@ -203,8 +202,8 @@ public class RestaurantController {
         List<Photo> photos = (List<Photo>) photoService.listAllPhotosById(id);
         byte[] encodeBase64;
         String base64Encoded;
-        for (int i = 0; i < photos.size(); i++) {
-            encodeBase64 = Base64.encode(photos.get(i).getPhoto());
+        for (Photo photo : photos) {
+            encodeBase64 = Base64.encode(photo.getPhoto());
             base64Encoded = new String(encodeBase64, "UTF-8");
             restaurantPhotos.add(base64Encoded);
         }
@@ -222,7 +221,6 @@ public class RestaurantController {
         Restaurant r = restaurantService.getRestaurant(restaurantId);
         ul.setRestaurant(r);
         userLikesService.saveUserLike(ul);
-        System.out.println("entra");
         return "redirect:/restaurant/" + restaurantId;
     }
 

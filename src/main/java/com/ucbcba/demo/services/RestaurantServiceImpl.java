@@ -49,9 +49,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public boolean alreadyCommented(Integer userId, Integer restId) {
         List<Comment> comments = listAllComments(restId);
-        for(int i=0;i<comments.size();i++)
-        {
-            if(comments.get(i).getUser().getId()==userId && comments.get(i).getRestaurant().getId()==restId)
+        for (Comment comment : comments) {
+            if (comment.getUser().getId().equals(userId) && comment.getRestaurant().getId().equals(restId))
                 return true;
         }
         return false;

@@ -227,7 +227,12 @@
             </div>
         </div>
 
-        <<<<<<< HEAD
+        <div class="form-group">
+            <div class="col-md-9">
+                <h4>Comments:</h4>
+            </div>
+        </div>
+
         <div th:each="comment : ${restaurant.comments}" class="row">
             <!--<div class="col-sm-1">-->
             <!--<div class="thumbnail">-->
@@ -238,7 +243,7 @@
             <div class="col-sm-5">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <strong th:text="${comment.user.username}"></strong>
+                        <strong th:text="${user.username}"></strong>
                         <span class="text-muted">Score:</span>
                         <span class="text-muted" th:text="${comment.score}"></span>
                     </div>
@@ -250,10 +255,22 @@
         <div th:if="${logged}">
             <div class="col-md-12 ">
                 <h4>Comment: </h4>
-                <form class="form-horizontal" action="/comment" method="post">
+                <form class="form-horizontal" th:object="${comment}" th:action="@{/comment}" method="post">
                     <div class="form-group">
                         <div class="col-md-9">
-                            <select name="score">
+                            <input type="hidden" th:value="${restaurant.id}" th:field="*{restaurant}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-9">
+                            + <input type="hidden" th:value="${user.id}" th:field="*{user}"/><label
+                                th:if="${#fields.hasErrors('user')}" th:errors="*{user}"
+                                class="validation-message">Errors</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-9">
+                            <select th:field="*{score}">
                                 <option id="score" name="score" th:each="score:${calification}" th:value="${score}"
                                         th:text="${score}">
                                 </option>
