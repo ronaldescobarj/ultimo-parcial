@@ -103,21 +103,23 @@ public class RestaurantController {
 
     @RequestMapping("admin/restaurant/{id}")
     String showRestaurant(@PathVariable Integer id, Model model) throws UnsupportedEncodingException {
-        model.addAttribute("restaurant", restaurantService.getRestaurant(id));
         Integer califs[] = {1, 2, 3, 4, 5};
         Integer average = 0;
         List<Comment> comments = restaurantService.getRestaurant(id).getComments();
         for (Comment comment : comments) {
             average = average + comment.getScore();
         }
-        model.addAttribute("calification", califs);
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        model.addAttribute("user", userService.findByUsername(((User) auth.getPrincipal()).getUsername()));
         Integer averageScore = 0;
         if (comments.size() != 0)
             averageScore = average / comments.size();
-        model.addAttribute("averageScore", averageScore);
         List restaurantPhotos = new ArrayList();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        com.ucbcba.demo.entities.User user=userService.findByUsername(((User) auth.getPrincipal()).getUsername());
+        Restaurant restaurant = restaurantService.getRestaurant(id);
+        model.addAttribute("restaurant", restaurant);
+        model.addAttribute("calification", califs);
+        model.addAttribute("user",user);
+        model.addAttribute("averageScore", averageScore);
         Integer likes = userLikesService.getLikes(id);
         model.addAttribute("likes", likes);
         List<Photo> photos = (List<Photo>) photoService.listAllPhotosById(id);
@@ -165,8 +167,10 @@ public class RestaurantController {
     }
 
     @RequestMapping("restaurant/{id}")
-    String showRestaurantUser(@PathVariable Integer id, Model model) throws UnsupportedEncodingException {
+    String showRestaurantUser(@PathVariable Integer id, Model model,com.ucbcba.demo.entities.User user) throws UnsupportedEncodingException {
         Boolean logged = false;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Restaurant restaurant = restaurantService.getRestaurant(id);
         Integer califs[] = {1, 2, 3, 4, 5};
         model.addAttribute("calification", califs);
         Integer average = 0;
@@ -178,16 +182,20 @@ public class RestaurantController {
         if (comments.size() != 0)
             averageScore = average / comments.size();
         model.addAttribute("averageScore", averageScore);
-        model.addAttribute("restaurant", restaurantService.getRestaurant(id));
+        model.addAttribute("commentError","You can only add one comment by Restaurant");
+        model.addAttribute("restaurant", restaurant);
         Integer likes = userLikesService.getLikes(id);
         model.addAttribute("likes", likes);
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Boolean isLiked = false;
         if (!auth.getPrincipal().equals("anonymousUser")) {
+            user=userService.findByUsername(((User) auth.getPrincipal()).getUsername());
             logged = true;
             User u = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
-            com.ucbcba.demo.entities.User user = userService.findByUsername(u.getUsername());
             isLiked = userLikesService.isLiked(user.getId(), id);
+            model.addAttribute("user",user);
+            model.addAttribute("comment", new Comment(restaurant, user));
+            boolean userCommented = restaurantService.alreadyCommented(user.getId(),restaurant.getId());
+            model.addAttribute("userCommented",userCommented);
         }
         model.addAttribute("isLiked", isLiked);
         model.addAttribute("logged", logged);

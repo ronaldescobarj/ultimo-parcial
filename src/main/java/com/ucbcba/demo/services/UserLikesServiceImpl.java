@@ -36,7 +36,7 @@ public class UserLikesServiceImpl implements UserLikesService {
     }
 
     @Override
-    public Boolean isLiked(Long userId, Integer restaurantId) {
+    public Boolean isLiked(Integer userId, Integer restaurantId) {
         List<UserLike> usersLike;
         Boolean res = false;
         usersLike = (List<UserLike>)userLikesRepository.findAll();
@@ -49,7 +49,7 @@ public class UserLikesServiceImpl implements UserLikesService {
     }
 
     @Override
-    public void deleteUserLike(Long userId, Integer restaurantId) {
+    public void deleteUserLike(Integer userId, Integer restaurantId) {
         List<UserLike> usersLike;
         usersLike = (List<UserLike>)userLikesRepository.findAll();
         for(int i=0;i<usersLike.size();i++)

@@ -9,7 +9,7 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Integer id;
     @Size(min=1, message="This field cannot be blank")
     private String username;
     @Size(min=1, message="This field cannot be blank")
@@ -25,11 +25,11 @@ public class User {
     private String lastName;
 
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
