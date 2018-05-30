@@ -159,150 +159,151 @@
             </div>
 
         </div>
-        <h1 th:text="${restaurant.name}" align="center"></h1>
-        <div class="form-group">
-            <div class="col-md-9">
-                <h4>Likes: </h4>
-                <h5 th:text="${likes}"></h5>
-            </div>
-        </div>
-
-        <div th:if="${logged}">
+        <div class="container">
+            <h1 th:text="${restaurant.name}" align="center"></h1>
             <div class="form-group">
-                <div class="col-md-9">
-                    <a class="col-md-3" th:href="${'/restaurant/like/' + restaurant.id}" th:if="${!isLiked}">
-                        <button class="btn btn-success">Like</button>
-                    </a>
-                    <a class="col-md-3" th:href="${'/restaurant/dislike/' + restaurant.id}" th:if="${isLiked}">
-                        <button class="btn btn-danger"> Dislike</button>
-                    </a>
+                <div class="col-md-10">
+                    <h4 class="control-label col-md-1">Likes:</h4>
+                    <h4 class="col-md-1" th:text="${likes}"></h4>
+                    <div th:if="${logged}">
+                        <a class="col-md-3" th:href="${'/restaurant/like/' + restaurant.id}"
+                           th:if="${!isLiked}">
+                            <button class="btn btn-success">Like</button>
+                        </a>
+                    </div>
+                    <div th:if="${logged}">
+                        <a class="col-md-3" th:href="${'/restaurant/dislike/' + restaurant.id}"
+                           th:if="${isLiked}">
+                            <button class="btn btn-danger"> Dislike</button>
+                        </a>
+                    </div>
+                    <h4 class="control-label col-md-1">Score: </h4>
+                    <h4 class="col-md-1" th:text="${averageScore}"></h4>
                 </div>
             </div>
-        </div>
 
-        <div th:if="${!logged}">
+            <div th:if="${!logged}" class="form-group">
+                <div class="col-md-10">
+                    <h4><b>You must be logged in to like or dislike the restaurant</b></h4>
+                </div>
+            </div>
+
             <div class="form-group">
-                <div class="col-md-9">
-                    <h5>You must be logged in to like or dislike the restaurant</h5>
+                <div class="col-md-10">
+                    <h4><b>Description: </b></h4>
                 </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <div class="col-md-9">
-                <h4>Score: </h4>
-                <h5 th:text="${averageScore}"></h5>
-            </div>
-        </div>
-
-
-        <div class="form-group">
-            <div class="col-md-9">
-                <h3 th:text="${restaurant.description}"></h3>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-9">
-                <h4>Categories: </h4>
-                <ul th:each="category: ${restaurant.categories}">
-                    <li th:text="${category.name}"></li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-9">
-                <h4>City: </h4>
-                <h5 th:text="${restaurant.city.name}"></h5>
-            </div>
-        </div>
-
-        <div th:if="${#lists.size(photos)}" class="form-group">
-            <div class="col-md-9">
-                <h4>Photos: </h4>
-                <div th:each="photo : ${photos}">
-                    <img th:src="@{'data:image/jpg;base64,' +  ${photo}}" width="400"/>
+            <div class="form-group">
+                <div class="col-md-10">
+                    <p th:text="${restaurant.description}"></p>
                 </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <div class="col-md-9">
-                <h4>Comments:</h4>
-            </div>
-        </div>
-
-        <div th:each="comment : ${restaurant.comments}" class="row">
-            <!--<div class="col-sm-1">-->
-            <!--<div class="thumbnail">-->
-            <!--<img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png"/>-->
-            <!--</div>-->
-            <!--</div>-->
-
-            <div class="col-sm-5">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <strong th:text="${user.username}"></strong>
-                        <span class="text-muted">Score:</span>
-                        <span class="text-muted" th:text="${comment.score}"></span>
-                    </div>
-                    <div class="panel-body" th:text="${comment.text}"></div>
+            <div th:if="${#lists.size(restaurant.categories)}" class="form-group">
+                <div class="col-md-10">
+                    <label class="control-label col-md-2"><b>Categories:</b></label>
+                    <ul th:each="category: ${restaurant.categories}">
+                        <li th:text="${category.name}"></li>
+                    </ul>
                 </div>
             </div>
-        </div>
 
-        <div th:if="${logged}">
-            <div class="col-md-12 ">
-                <h4>Comment: </h4>
-                <form class="form-horizontal" th:object="${comment}" th:action="@{/comment}" method="post">
-                    <div class="form-group">
-                        <div class="col-md-9">
-                            <input type="hidden" th:value="${restaurant.id}" th:field="*{restaurant}"/>
-                        </div>
+            <div class="form-group">
+                <div class="col-md-10 ">
+                    <h4 class="control-label col-md-1"><b>City: </b></h4>
+                    <h4 class="col-md-10" th:text="${restaurant.city.name}"></h4>
+                </div>
+            </div>
+
+            <div th:if="${#lists.size(photos)}" class="form-group">
+                <div class="col-md-10">
+                    <h4 class="control-label col-md-2"><b>Photos: </b></h4>
+                    <div th:each="photo : ${photos}">
+                        <img th:src="@{'data:image/jpg;base64,' +  ${photo}}" width="400"/>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-9">
-                            + <input type="hidden" th:value="${user.id}" th:field="*{user}"/><label
-                                th:if="${#fields.hasErrors('user')}" th:errors="*{user}"
-                                class="validation-message">Errors</label>
+                </div>
+            </div>
+
+            <div th:if="${#lists.size(restaurant.comments)}" class="form-group">
+                <div class="col-md-10">
+                    <h4 class="control-label"><b>Comments:</b></h4>
+                </div>
+            </div>
+
+            <div th:each="comment : ${restaurant.comments}" class="row">
+                <!--<div class="col-sm-1">-->
+                <!--<div class="thumbnail">-->
+                <!--<img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png"/>-->
+                <!--</div>-->
+                <!--</div>-->
+                <div class="col-sm-5">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <strong th:text="${user.username}"></strong>
+                            <span class="text-muted">Score:</span>
+                            <span class="text-muted" th:text="${comment.score}"></span>
                         </div>
+                        <div class="panel-body" th:text="${comment.text}"></div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-9">
-                            <select th:field="*{score}">
-                                <option id="score" name="score" th:each="score:${calification}" th:value="${score}"
-                                        th:text="${score}">
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-9">
-                            <input type="hidden" name="restaurant" id="restaurant" th:value="${restaurant.id}"/>
-                            <textarea name="text" id="text" rows="5"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            <button type="sumbit" value="Comment" class="btn btn-primary btn-lg">Comment</button>
-                        </div>
-                    </div>
-                    <div th:if="${userCommented}">
-                        <div class="form-group">
-                            <div class="col-md-9">
-                                <h4 th:text="${commentError}"></h4>
+                </div>
+            </div>
+
+            <div th:if="${logged}">
+                <div class="col-md-10 ">
+                    <div class="container">
+                        <form class="form-horizontal" th:object="${comment}" th:action="@{/comment}" method="post">
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    <input type="hidden" th:value="${restaurant.id}" th:field="*{restaurant}"/>
+                                </div>
                             </div>
-                        </div>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    <input type="hidden" th:value="${user.id}" th:field="*{user}"/><label
+                                        th:if="${#fields.hasErrors('user')}" th:errors="*{user}"
+                                        class="validation-message">Errors</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-9">
+                                    <select th:field="*{score}">
+                                        <option id="score" name="score" th:each="score:${calification}"
+                                                th:value="${score}"
+                                                th:text="${score}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-9">
+                                    <input type="hidden" name="restaurant" id="restaurant" th:value="${restaurant.id}"/>
+                                    <textarea name="text" id="text" cols="50" rows="5"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    <button type="sumbit" value="Comment" class="btn btn-primary btn-lg">Comment
+                                    </button>
+                                </div>
+                            </div>
+                            <div th:if="${userCommented}">
+                                <div class="form-group">
+                                    <div class="col-md-10">
+                                        <h4 class="bold" th:text="${commentError}"></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
 
-        <div th:if="${!logged}">
-            <div class="form-group">
-                <div class="col-md-9">
-                    <h4>You must be logged in to comment the restaurant</h4>
+            <div th:if="${!logged}">
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <h4 style="color:#ED1C23"><b>You must be logged in to comment the restaurant</b></h4>
+                    </div>
                 </div>
             </div>
         </div>

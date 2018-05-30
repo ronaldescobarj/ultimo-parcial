@@ -1,12 +1,8 @@
-package com.ucbcba.demo.Controllers;
+package com.ucbcba.demo.controllers;
 
 import com.ucbcba.demo.entities.*;
 import com.ucbcba.demo.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -19,17 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.activation.MimetypesFileTypeMap;
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-//import java.util.List;
 
 @Controller
 public class RestaurantController {
@@ -104,29 +94,21 @@ public class RestaurantController {
     @RequestMapping("admin/restaurant/{id}")
     String showRestaurant(@PathVariable Integer id, Model model) throws UnsupportedEncodingException {
         Integer califs[] = {1, 2, 3, 4, 5};
-        Integer average = 0;
-        List<Comment> comments = restaurantService.getRestaurant(id).getComments();
-        for (Comment comment : comments) {
-            average = average + comment.getScore();
-        }
-        Integer averageScore = 0;
-        if (comments.size() != 0)
-            averageScore = average / comments.size();
-        List restaurantPhotos = new ArrayList();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        com.ucbcba.demo.entities.User user=userService.findByUsername(((User) auth.getPrincipal()).getUsername());
+        com.ucbcba.demo.entities.User user = userService.findByUsername(((User) auth.getPrincipal()).getUsername());
         Restaurant restaurant = restaurantService.getRestaurant(id);
         model.addAttribute("restaurant", restaurant);
         model.addAttribute("calification", califs);
-        model.addAttribute("user",user);
-        model.addAttribute("averageScore", averageScore);
+        model.addAttribute("user", user);
+        model.addAttribute("averageScore", restaurantService.getScore(id));
+        List restaurantPhotos = new ArrayList();
         Integer likes = userLikesService.getLikes(id);
         model.addAttribute("likes", likes);
         List<Photo> photos = (List<Photo>) photoService.listAllPhotosById(id);
         byte[] encodeBase64;
         String base64Encoded;
-        for (Photo photo : photos) {
-            encodeBase64 = Base64.encode(photo.getPhoto());
+        for (int i = 0; i < photos.size(); i++) {
+            encodeBase64 = Base64.encode(photos.get(i).getPhoto());
             base64Encoded = new String(encodeBase64, "UTF-8");
             restaurantPhotos.add(base64Encoded);
         }
@@ -167,34 +149,28 @@ public class RestaurantController {
     }
 
     @RequestMapping("restaurant/{id}")
-    String showRestaurantUser(@PathVariable Integer id, Model model,com.ucbcba.demo.entities.User user) throws UnsupportedEncodingException {
+    String showRestaurantUser(@PathVariable Integer id, Model model, com.ucbcba.demo.entities.User user) throws UnsupportedEncodingException {
         Boolean logged = false;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Restaurant restaurant = restaurantService.getRestaurant(id);
         Integer califs[] = {1, 2, 3, 4, 5};
         model.addAttribute("calification", califs);
-        Integer average = 0;
-        List<Comment> comments = restaurantService.getRestaurant(id).getComments();
-        for (Comment comment : comments) {
-            average = average + comment.getScore();
-        }
-        Integer averageScore = 0;
-        if (comments.size() != 0)
-            averageScore = average / comments.size();
-        model.addAttribute("averageScore", averageScore);
-        model.addAttribute("commentError","You can only add one comment by Restaurant");
+        model.addAttribute("averageScore", restaurantService.getScore(id));
+        model.addAttribute("commentError", "You can only add one comment by Restaurant");
         model.addAttribute("restaurant", restaurant);
         Integer likes = userLikesService.getLikes(id);
         model.addAttribute("likes", likes);
         Boolean isLiked = false;
         if (!auth.getPrincipal().equals("anonymousUser")) {
-            user=userService.findByUsername(((User) auth.getPrincipal()).getUsername());
+            user = userService.findByUsername(((User) auth.getPrincipal()).getUsername());
             logged = true;
             isLiked = userLikesService.isLiked(user.getId(), id);
-            model.addAttribute("user",user);
+            model.addAttribute("user", user);
             model.addAttribute("comment", new Comment(restaurant, user));
-            boolean userCommented = restaurantService.alreadyCommented(user.getId(),restaurant.getId());
-            model.addAttribute("userCommented",userCommented);
+            boolean userCommented = restaurantService.alreadyCommented(user.getId(), restaurant.getId());
+            model.addAttribute("userCommented", userCommented);
+
+
         }
         model.addAttribute("isLiked", isLiked);
         model.addAttribute("logged", logged);
@@ -202,8 +178,8 @@ public class RestaurantController {
         List<Photo> photos = (List<Photo>) photoService.listAllPhotosById(id);
         byte[] encodeBase64;
         String base64Encoded;
-        for (Photo photo : photos) {
-            encodeBase64 = Base64.encode(photo.getPhoto());
+        for (int i = 0; i < photos.size(); i++) {
+            encodeBase64 = Base64.encode(photos.get(i).getPhoto());
             base64Encoded = new String(encodeBase64, "UTF-8");
             restaurantPhotos.add(base64Encoded);
         }
@@ -221,6 +197,7 @@ public class RestaurantController {
         Restaurant r = restaurantService.getRestaurant(restaurantId);
         ul.setRestaurant(r);
         userLikesService.saveUserLike(ul);
+        System.out.println("entra");
         return "redirect:/restaurant/" + restaurantId;
     }
 
