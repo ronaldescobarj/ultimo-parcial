@@ -7,6 +7,7 @@ import com.ucbcba.demo.services.RestaurantService;
 import com.ucbcba.demo.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,11 +33,9 @@ public class HomeController {
 
     @RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
     public String welcome(Model model) {
-        Boolean logged = false;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!auth.getPrincipal().equals("anonymousUser")) {
-            logged = true;
-        }
+        Boolean logged = (!getUserRole(auth).equals("notLogged"));
+        model.addAttribute("role", getUserRole(auth));
         model.addAttribute("logged", logged);
         model.addAttribute("cities", cityService.listAllCities());
         model.addAttribute("restaurants", restaurantService.listAllRestaurants());
@@ -56,11 +55,9 @@ public class HomeController {
                         || searchCategories(p.getCategories(), searchFilter.toLowerCase()))
         ).collect(Collectors.toList());
 
-        Boolean logged = false;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!auth.getPrincipal().equals("anonymousUser")) {
-            logged = true;
-        }
+        Boolean logged = (!getUserRole(auth).equals("notLogged"));
+        model.addAttribute("role", getUserRole(auth));
         model.addAttribute("logged", logged);
         model.addAttribute("restaurants", restaurants);
         model.addAttribute("searchFilter", searchFilter);
@@ -74,5 +71,14 @@ public class HomeController {
                 return true;
         }
         return false;
+    }
+
+    private String getUserRole(Authentication auth) {
+        if (!auth.getPrincipal().equals("anonymousUser")) {
+            User u = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
+            com.ucbcba.demo.entities.User user = userService.findByUsername(u.getUsername());
+            return user.getRole().toLowerCase();
+        }
+        return "notLogged";
     }
 }
