@@ -19,7 +19,7 @@ public interface RestaurantService {
 
     List<Comment> listAllComments(Integer id);
 
-    boolean alreadyCommented(Integer userId, Integer restId);
+    Comment alreadyCommented(Integer userId, Integer restId);
 
     Integer getScore(Integer id);
 

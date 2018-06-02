@@ -252,7 +252,7 @@
             <div class="col-sm-5">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <strong th:text="${user.username}"></strong>
+                        <a th:href="${'/profile/'+ comment.user.id }"><b  th:title="${comment.user.username}" th:text="${comment.user.username}"></b></a>
                         <span class="text-muted">Score:</span>
                         <span class="text-muted" th:text="${comment.score}"></span>
                     </div>
@@ -277,33 +277,29 @@
                                     class="validation-message">Errors</label>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <div class="col-md-9">
-                                <select th:field="*{score}">
-                                    <option id="score" name="score" th:each="score:${calification}"
-                                            th:value="${score}"
-                                            th:text="${score}">
-                                    </option>
-                                </select>
+                                <input type="hidden" name="restaurant" id="restaurant" th:value="${restaurant.id}"/>
+                                <input type="hidden" name="user" id="user" th:value="${user.id}"/>
+                                <textarea th:if="${userComment==null}" name="text" id="text" cols="50" rows="5"></textarea>
+                                <textarea th:if="${userComment!=null}" name="text" id="text" th:text="${userComment.text}"  cols="50" rows="5"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-9">
-                                <input type="hidden" name="restaurant" id="restaurant" th:value="${restaurant.id}"/>
-                                <textarea name="text" id="text" cols="50" rows="5"></textarea>
+                                <span>Score: </span><select th:field="*{score}">
+                                <option class="btn btn-default dropdown-toggle" th:each="score : ${calification}" th:value="${score}" th:text="${score}">
+                                </option>
+                            </select>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                <button type="sumbit" value="Comment" class="btn btn-primary btn-lg">Comment
+                                <button th:if="${userComment==null}" type="submit" value="Comment" class="btn btn-primary btn-lg">Comment
                                 </button>
-                            </div>
-                        </div>
-                        <div th:if="${userCommented}">
-                            <div class="form-group">
-                                <div class="col-md-10">
-                                    <h4 class="bold" th:text="${commentError}"></h4>
-                                </div>
+                                <button th:if="${userComment!=null}" type="submit" value="Edit" class="btn btn-primary btn-lg">Edit
+                                </button>
                             </div>
                         </div>
                     </form>

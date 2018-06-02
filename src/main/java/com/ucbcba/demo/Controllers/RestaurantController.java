@@ -1,4 +1,4 @@
-package com.ucbcba.demo.controllers;
+package com.ucbcba.demo.Controllers;
 
 import com.ucbcba.demo.entities.*;
 import com.ucbcba.demo.services.*;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.datatransfer.DataFlavor;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -170,8 +171,8 @@ public class RestaurantController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Boolean logged = (!getUserRole(auth).equals("notLogged"));
         Integer califs[] = {1, 2, 3, 4, 5};
-
         Restaurant restaurant = restaurantService.getRestaurant(id);
+        Comment comment=new Comment();
         Integer likes = userLikesService.getLikes(id);
         Boolean isLiked = false;
 
@@ -189,9 +190,16 @@ public class RestaurantController {
             user = userService.findByUsername(((User) auth.getPrincipal()).getUsername());
             isLiked = userLikesService.isLiked(user.getId(), id);
             model.addAttribute("user", user);
-            model.addAttribute("comment", new Comment(restaurant, user));
-            boolean userCommented = restaurantService.alreadyCommented(user.getId(), restaurant.getId());
-            model.addAttribute("userCommented", userCommented);
+            Comment userComment = restaurantService.alreadyCommented(user.getId(), restaurant.getId());
+            if(userComment!=null) {
+                comment=userComment;
+                model.addAttribute("comment", comment);
+                model.addAttribute("userComment", userComment);
+            }
+            else
+                comment=new Comment(restaurant,user);
+                model.addAttribute("comment", comment);
+
         }
         model.addAttribute("role", getUserRole(auth));
         model.addAttribute("likes", likes);

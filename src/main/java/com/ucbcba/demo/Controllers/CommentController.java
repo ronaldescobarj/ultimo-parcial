@@ -38,19 +38,25 @@ public class CommentController {
     @RequestMapping(value = "/comment", method = RequestMethod.POST)
     String save(Model model, @Valid @ModelAttribute Comment comment, BindingResult bindingResult) {
         model.addAttribute("comment",comment);
+        System.out.println(comment.getScore());
+        System.out.println(comment.getText());
         User userExists = null;
         User user = comment.getUser();
         List<Comment> comments=restaurantService.listAllComments(comment.getRestaurant().getId());
         for(int i=0;i<comments.size();i++){
-            if(user.getUsername() == comments.get(i).getUser().getUsername()){
+            if(user.getUsername() == comments.get(i).getUser().getUsername()) {
                 System.out.println(comments.get(i).getUser().getUsername());
-                userExists=user;
+                userExists = user;
+                comments.get(i).setText(comment.getText());
+                comments.get(i).setScore(comment.getScore());
+                commentService.saveComment(comments.get(i));
+
             }
         }
-        if(userExists!= null) {
+        if(userExists==null) {
+            commentService.saveComment(comment);
             return "redirect:/restaurant/" + comment.getRestaurant().getId();
         }
-        commentService.saveComment(comment);
         return "redirect:/restaurant/" + comment.getRestaurant().getId();
     }
 }
