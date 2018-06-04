@@ -31,6 +31,7 @@ public class RestaurantController {
     private PhotoService photoService;
     private UserLikesService userLikesService;
     private UserService userService;
+    private CommentService commentService;
 
     @Autowired
     public void setRestaurantService(RestaurantService restaurantService) {
@@ -60,6 +61,11 @@ public class RestaurantController {
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
+    }
+
+    @Autowired
+    public void setCommentService(CommentService commentService) {
+        this.commentService = commentService;
     }
 
     @RequestMapping(value = "admin/restaurants", method = RequestMethod.GET)
@@ -242,5 +248,26 @@ public class RestaurantController {
             return user.getRole().toLowerCase();
         }
         return "notLogged";
+    }
+    @RequestMapping(value = "user/view", method = RequestMethod.GET)
+    public String userView(Model model ) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User u = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
+        com.ucbcba.demo.entities.User user = userService.findByUsername(u.getUsername());
+        Boolean haveComments = true;
+        List<Comment> comments = (List<Comment>) commentService.listAllCommentsByUser(user.getId());
+        if(comments.isEmpty())
+        {
+            haveComments = false;
+        }
+        model.addAttribute("thisUser",user);
+        model.addAttribute("flag",haveComments);
+        model.addAttribute("comments",comments);
+        return "userView";
+    }
+    @RequestMapping(value = "user/save", method = RequestMethod.POST)
+    public String userView(com.ucbcba.demo.entities.User user ) {
+        userService.save(user);
+        return "redirect:/admin/restaurants";
     }
 }

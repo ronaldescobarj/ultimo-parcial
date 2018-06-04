@@ -12,4 +12,6 @@ public interface CommentService {
 
     void deleteComment(Integer id);
 
+    Iterable<Comment> listAllCommentsByUser(Integer userId);
+
 }

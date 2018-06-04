@@ -35,6 +35,8 @@ public class HomeController {
     public String welcome(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Boolean logged = (!getUserRole(auth).equals("notLogged"));
+
+
         model.addAttribute("role", getUserRole(auth));
         model.addAttribute("logged", logged);
         model.addAttribute("cities", cityService.listAllCities());

@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class CommentServiceImpl implements CommentService {
 
@@ -35,6 +38,18 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void deleteComment(Integer id) {
         commentRepository.delete(id);
+    }
+
+    @Override
+    public Iterable<Comment> listAllCommentsByUser(Integer userId) {
+        List<Comment> allComments = (List<Comment>) commentRepository.findAll();
+        List<Comment> res = new ArrayList<>();
+        for(int i=0;i<allComments.size();i++)
+        {
+            if(allComments.get(i).getUser().getId() == userId)
+                res.add(allComments.get(i));
+        }
+        return (Iterable<Comment>)res;
     }
 
 }
