@@ -96,7 +96,7 @@
             <div class="col-sm-5">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <strong th:text="${user.username}"></strong>
+                        <a th:href="${'/user/view/' + comment.user.id}"><b  th:title="${comment.user.username}" th:text="${comment.user.username}"></b></a>
                         <span class="text-muted">Score:</span>
                         <span class="text-muted" th:text="${comment.score}"></span>
                     </div>

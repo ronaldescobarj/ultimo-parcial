@@ -8,7 +8,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.stereotype.Controller;
-
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -249,11 +248,11 @@ public class RestaurantController {
         }
         return "notLogged";
     }
-    @RequestMapping(value = "user/view", method = RequestMethod.GET)
-    public String userView(Model model ) {
+    @RequestMapping(value = "user/view/{userId}", method = RequestMethod.GET)
+    public String userView(Model model,@PathVariable Integer userId ) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User u = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
-        com.ucbcba.demo.entities.User user = userService.findByUsername(u.getUsername());
+        com.ucbcba.demo.entities.User user = userService.findById(userId);
         Boolean haveComments = true;
         List<Comment> comments = (List<Comment>) commentService.listAllCommentsByUser(user.getId());
         if(comments.isEmpty())
