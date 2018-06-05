@@ -171,6 +171,19 @@ public class RestaurantController {
         return "redirect:/admin/restaurant/edit/" + photo.getRestaurant().getId();
     }
 
+    @RequestMapping(value = "/restaurant/like/{restaurantId}")
+    public String like(@PathVariable Integer restaurantId) {
+        UserLike ul = new UserLike();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User u = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
+        com.ucbcba.demo.entities.User user = userService.findByUsername(u.getUsername());
+        ul.setUser(user);
+        Restaurant r = restaurantService.getRestaurant(restaurantId);
+        ul.setRestaurant(r);
+        userLikesService.saveUserLike(ul);
+        return "redirect:/restaurant/" + restaurantId;
+    }
+
     @RequestMapping("restaurant/{id}")
     String showRestaurantUser(@PathVariable Integer id, Model model, com.ucbcba.demo.entities.User user) throws UnsupportedEncodingException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -203,7 +216,7 @@ public class RestaurantController {
             }
             else
                 comment=new Comment(restaurant,user);
-                model.addAttribute("comment", comment);
+            model.addAttribute("comment", comment);
 
         }
         model.addAttribute("role", getUserRole(auth));
@@ -216,19 +229,6 @@ public class RestaurantController {
         model.addAttribute("logged", logged);
         model.addAttribute("photos", restaurantPhotos);
         return "restaurantUserView";
-    }
-
-    @RequestMapping(value = "/restaurant/like/{restaurantId}")
-    public String like(@PathVariable Integer restaurantId) {
-        UserLike ul = new UserLike();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User u = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
-        com.ucbcba.demo.entities.User user = userService.findByUsername(u.getUsername());
-        ul.setUser(user);
-        Restaurant r = restaurantService.getRestaurant(restaurantId);
-        ul.setRestaurant(r);
-        userLikesService.saveUserLike(ul);
-        return "redirect:/restaurant/" + restaurantId;
     }
 
     @RequestMapping(value = "/restaurant/dislike/{restaurantId}")
