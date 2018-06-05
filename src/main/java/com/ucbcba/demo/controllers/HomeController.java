@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -111,28 +109,6 @@ public class HomeController {
         model.addAttribute("restaurantsList", restaurantsList);
         return "home";
     }
-
-    /*@RequestMapping(value = {"/search"}, method = RequestMethod.POST)
-    public String search(Model model, String searchFilter) {
-
-        List<Restaurant> restaurantList = new ArrayList<>();
-        for (Restaurant restaurant : restaurantService.listAllRestaurants()) {
-            restaurantList.add(restaurant);
-        }
-        List<Restaurant> restaurants = restaurantList.stream().filter(
-                p -> (p.getName().toLowerCase().contains(searchFilter.toLowerCase())
-                        || searchCategories(p.getCategories(), searchFilter.toLowerCase()))
-        ).collect(Collectors.toList());
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Boolean logged = (!getUserRole(auth).equals("notLogged"));
-        model.addAttribute("role", getUserRole(auth));
-        model.addAttribute("logged", logged);
-        model.addAttribute("restaurants", restaurants);
-        model.addAttribute("searchFilter", searchFilter);
-        model.addAttribute("cities", cityService.listAllCities());
-        return "home";
-    }*/
 
     private Boolean searchCategories(Set<Category> categories, String param) {
         for (Category category : categories) {
