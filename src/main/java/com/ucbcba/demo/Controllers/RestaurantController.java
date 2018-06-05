@@ -252,7 +252,13 @@ public class RestaurantController {
     public String userView(Model model,@PathVariable Integer userId ) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User u = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
+        com.ucbcba.demo.entities.User principalUser = userService.findByUsername(u.getUsername());
         com.ucbcba.demo.entities.User user = userService.findById(userId);
+        Boolean userPrincipal = false;
+        if(user.getId() == principalUser.getId())
+        {
+            userPrincipal =true;
+        }
         Boolean haveComments = true;
         List<Comment> comments = (List<Comment>) commentService.listAllCommentsByUser(user.getId());
         if(comments.isEmpty())
@@ -262,11 +268,44 @@ public class RestaurantController {
         model.addAttribute("thisUser",user);
         model.addAttribute("flag",haveComments);
         model.addAttribute("comments",comments);
+        model.addAttribute("userFlag",userPrincipal);
         return "userView";
     }
-    @RequestMapping(value = "user/save", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/save", method = RequestMethod.POST)
     public String userView(com.ucbcba.demo.entities.User user ) {
-        userService.save(user);
-        return "redirect:/admin/restaurants";
+        userService.save2(user);
+        return "redirect:/user/view/"+user.getId();
     }
+
+    @RequestMapping(value = "/user/edit/{id}")
+    public String userEdit(@PathVariable Integer id, Model model) {
+        model.addAttribute("user",userService.findById(id));
+        return "userEdit";
+    }
+
+    @RequestMapping(value = "/changePassword/{id}")
+    public String changePassword(@PathVariable Integer id, Model model) {
+        model.addAttribute("user",userService.findById(id));
+        return "changePassword";
+    }
+
+    @RequestMapping(value = "/savePassword",method = RequestMethod.POST)
+    public String savePassword(Model model, com.ucbcba.demo.entities.User user) {
+        Boolean error = false;
+        if(!user.getPassword().equals(user.getPasswordConfirm()))
+        {
+            error = true;
+            model.addAttribute("error",error);
+            model.addAttribute("user",user);
+            return "changePassword";
+        }
+        userService.save(user);
+        return "redirect:/user/view/"+user.getId();
+    }
+    @RequestMapping(value = "/user/delete/{id}")
+    String userDelete(@PathVariable Integer id, Model model) {
+        userService.deleteUser(id);
+        return "redirect:/login";
+    }
+
 }

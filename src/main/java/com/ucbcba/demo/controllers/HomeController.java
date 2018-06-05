@@ -33,6 +33,14 @@ public class HomeController {
     public String welcome(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Boolean logged = (!getUserRole(auth).equals("notLogged"));
+        com.ucbcba.demo.entities.User user = new com.ucbcba.demo.entities.User();
+        User u;
+        if(logged == true)
+        {
+            u = (org.springframework.security.core.userdetails.User)auth.getPrincipal();
+            user = userService.findByUsername(u.getUsername());
+        }
+
         List<Restaurant> rest = new ArrayList<>();
         restaurantService.listAllRestaurants().forEach(rest::add);
         rest.sort((r1, r2) -> {
@@ -41,6 +49,7 @@ public class HomeController {
             s2 = restaurantService.getScore(r2.getId());
             return s2.compareTo(s1);
         });
+        model.addAttribute("user",user);
         model.addAttribute("role", getUserRole(auth));
         model.addAttribute("logged", logged);
         model.addAttribute("cities", cityService.listAllCities());
