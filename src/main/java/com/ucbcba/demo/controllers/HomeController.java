@@ -13,9 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -35,12 +33,18 @@ public class HomeController {
     public String welcome(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Boolean logged = (!getUserRole(auth).equals("notLogged"));
-
-
+        List<Restaurant> rest = new ArrayList<>();
+        restaurantService.listAllRestaurants().forEach(rest::add);
+        rest.sort((r1, r2) -> {
+            Integer s1, s2;
+            s1 = restaurantService.getScore(r1.getId());
+            s2 = restaurantService.getScore(r2.getId());
+            return s2.compareTo(s1);
+        });
         model.addAttribute("role", getUserRole(auth));
         model.addAttribute("logged", logged);
         model.addAttribute("cities", cityService.listAllCities());
-        model.addAttribute("restaurants", restaurantService.listAllRestaurants());
+        model.addAttribute("restaurants", rest);
         model.addAttribute("searchFilter", "");
         return "home";
     }
