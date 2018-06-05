@@ -35,6 +35,14 @@ public class HomeController {
     public String welcome(Model model, @RequestParam(value = "searchFilter", required = false, defaultValue="") String searchFilter, @RequestParam(value = "cityDropdown", required = false, defaultValue="") String cityDropdown, @RequestParam(value = "showContent", required = false, defaultValue="") String showContent) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Boolean logged = (!getUserRole(auth).equals("notLogged"));
+        com.ucbcba.demo.entities.User user = new com.ucbcba.demo.entities.User();
+        User u;
+        if(logged == true)
+        {
+        u = (org.springframework.security.core.userdetails.User)auth.getPrincipal();
+        user = userService.findByUsername(u.getUsername());
+        }
+        model.addAttribute("user",user);
         model.addAttribute("role", getUserRole(auth));
         model.addAttribute("logged", logged);
         model.addAttribute("cities", cityService.listAllCities());
