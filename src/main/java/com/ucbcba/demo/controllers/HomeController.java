@@ -45,6 +45,11 @@ public class HomeController {
         return "home";
     }
 
+    @RequestMapping(value = {"/search"}, method = RequestMethod.GET)
+    public String redirectSearch(Model model) {
+        return "redirect:/home";
+    }
+
     @RequestMapping(value = {"/search"}, method = RequestMethod.POST)
     public String search(Model model, String searchFilter) {
 
