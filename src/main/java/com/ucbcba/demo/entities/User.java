@@ -2,6 +2,7 @@ package com.ucbcba.demo.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -24,6 +25,8 @@ public class User {
     @Size(min=1, message="This field cannot be blank")
     private String lastName;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
 
     public Integer getId() {
         return id;

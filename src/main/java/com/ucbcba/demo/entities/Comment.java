@@ -24,7 +24,7 @@ public class Comment {
     @Column(columnDefinition = "int(11) default 0")
     private Integer likes=0;
 
-    @ManyToOne()
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id")
     private User user;
 
