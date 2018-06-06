@@ -161,7 +161,7 @@
         }
 
         th {
-                background-color: #DAA520;
+            background-color: #DAA520;
             color: white;
         }
 
@@ -183,20 +183,21 @@
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
     <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 100%;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
+        /* Always set the map height explicitly to define the size of the div
+         * element that contains the map. */
+        #map {
+            height: 100%;
+        }
+
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
     </style>
     <script>
-        function changeSearchFilter(){
+        function changeSearchFilter() {
             document.getElementById("myForm").submit();
         }
     </script>
@@ -245,7 +246,8 @@
                 <form action="/home" id="myForm" method="get">
                     <input type="text" id="searchFilter" name="searchFilter" placeholder="Search by category or name"
                            onchange="changeSearchFilter();" th:value="${search}"/>
-                    <select class="btn btn-default" id="cityDropdown" onchange="changeSearchFilter()" name="cityDropdown">
+                    <select class="btn btn-default" id="cityDropdown" onchange="changeSearchFilter()"
+                            name="cityDropdown">
                         <option value="All cities">All cities</option>
                         <option th:each="city : ${cities}" th:value="${city.name}"
                                 th:selected="${city.name} == ${citySelected}" th:text="${city.name}"></option>
@@ -255,94 +257,66 @@
                 </form>
             </li>
             <li>
-                    <button onclick="show('table')">Table</button>
-                    <button onclick="show('map')">Map</button>
+                <button onclick="show('table')">Table</button>
+                <button onclick="show('map')">Map</button>
             </li>
-<script>
-function show(type) {
-    document.getElementById("showContent").value = type;
-    document.getElementById("myForm").submit();
+            <script>
+                function show(type) {
+                    document.getElementById("showContent").value = type;
+                    document.getElementById("myForm").submit();
 
-}
-</script>
+                }
+            </script>
         </ul>
     </div>
     <div id="block1">
-            <table th:if="${showTable=='table'}" id="dataTable">
-                <tr>
-                    <th>
-                        Name
-                    </th>
-                    <th>
-                        Description
-                    </th>
-                    <th>
-                        City
-                    </th>
-                </tr>
+        <table th:if="${showTable=='table'}" id="dataTable">
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    City
+                </th>
+            </tr>
 
-                <tr th:each="restaurant : ${restaurants}">
-                    <td><a th:text="${restaurant.name}" th:href="${'/restaurant/' + restaurant.id}"></a>
-                    </td>
-                    <td th:text="${restaurant.description}">
-                    </td>
-                    <td th:text="${restaurant.getCity().name}">
-                    </td>
-                </tr>
-            </table>
-            <div th:if="${showTable=='map'}" id="map"></div>
+            <tr th:each="restaurant : ${restaurants}">
+                <td><a th:text="${restaurant.name}" th:href="${'/restaurant/' + restaurant.id}"></a>
+                </td>
+                <td th:text="${restaurant.description}">
+                </td>
+                <td th:text="${restaurant.getCity().name}">
+                </td>
+            </tr>
+        </table>
+        <div th:if="${showTable=='map'}" id="map"></div>
         <script th:inline="javascript">
-      function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: -16.1795, lng: -64.8531},
-          zoom: 8
-        });
-        /*<![CDATA[*/
-        var restaurants = /*[[${restaurantsList}]]*/ 'default';
-        for (var i = 0; i < restaurants.length; i++) {
-            var marker = new google.maps.Marker({
-                position: {lat: restaurants[i].latitude, lng: restaurants[i].longitude},
-                map: map,
-                title: restaurants[i].name
-        });
-        }
-        /*]]>*/
-      }
+            function initMap() {
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    center: {lat: -16.1795, lng: -64.8531},
+                    zoom: 8
+                });
+                /*<![CDATA[*/
+                var restaurants = /*[[${restaurantsList}]]*/ 'default';
+                for (var i = 0; i < restaurants.length; i++) {
+                    var marker = new google.maps.Marker({
+                        position: {lat: restaurants[i].latitude, lng: restaurants[i].longitude},
+                        map: map,
+                        title: restaurants[i].name
+                    });
+                }
+                /*]]>*/
+            }
 
-    </script>
+        </script>
         <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyYErgX5t-pShxDcxp3FbHX4Cdnmb01f0&amp;callback=initMap"
                 async defer></script>
 -->
         <script async="async" defer="defer"
                 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyYErgX5t-pShxDcxp3FbHX4Cdnmb01f0&amp;callback=initMap">
-        </script>
-        <script>
-            function filterDataTable() {
-                var input, filter, table, tr, td;
-                input = document.getElementById("cityDropdown");
-                filter = input.options[input.selectedIndex].value.toUpperCase();
-                table = document.getElementById("dataTable");
-                tr = table.getElementsByTagName("tr");
-                /*<![CDATA[*/
-                for (var i = 0; i < tr.length; i++) {
-                    td = tr[i].getElementsByTagName("td")[2];
-                    if (!(filter === "ALL CITIES")) {
-                        if (td) {
-                            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                                tr[i].style.display = "";
-                            } else {
-                                tr[i].style.display = "none";
-                            }
-                        }
-                    }
-                    else {
-                        if (td) {
-                            tr[i].style.display = "";
-                        }
-                    }
-                    /*]]>*/
-                }
-            }
         </script>
     </div>
 </div>
