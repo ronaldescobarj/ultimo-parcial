@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>top</title>
+</head>
+<body>
+<h1>Top restaurants comentados</h1>
+<div th:each="restaurant : ${top}">
+    <b>Restaurant:</b>
+    <p th:text="${restaurant.name}"></p>
+    <b>Number of comments</b>
+    <p th:text="${restaurant.numberOfComments}"></p>
+</div>
+</body>
+</html>

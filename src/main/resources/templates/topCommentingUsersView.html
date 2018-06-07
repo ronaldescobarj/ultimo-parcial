@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>top</title>
+</head>
+<body>
+<h1>Top usuarios comentaristas</h1>
+<div th:each="user : ${top}">
+    <b>User:</b>
+    <p th:text="${user.username}"></p>
+    <b>Number of comments:</b>
+    <p th:text="${user.numberOfComments}"></p>
+</div>
+</body>
+</html>

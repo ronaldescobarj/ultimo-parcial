@@ -14,4 +14,10 @@ public interface CommentService {
 
     Iterable<Comment> listAllCommentsByUser(Integer userId);
 
+    Integer numberOfCommentsByUser(Integer userId);
+
+    Integer numberOfCommentsByRestaurant(Integer restaurantId);
+
+    Float averageScoreByUser(Integer userId);
+
 }

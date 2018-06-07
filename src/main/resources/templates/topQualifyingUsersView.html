@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>top</title>
+</head>
+<body>
+<h1>Top usuarios calificadores</h1>
+<div th:each="user : ${top}">
+    <b>User:</b>
+    <p th:text="${user.username}"></p>
+    <b>Average score</b>
+    <p th:text="${user.averageScore}"></p>
+</div>
+</body>
+</html>

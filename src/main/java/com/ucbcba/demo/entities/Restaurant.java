@@ -35,6 +35,9 @@ public class Restaurant {
     @NotNull
     private Float longitude;
 
+    @NotNull
+    private Integer numberOfComments = 0;
+
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
@@ -124,5 +127,13 @@ public class Restaurant {
 
     public void setLongitude(Float longitude) {
         this.longitude = longitude;
+    }
+
+    public Integer getNumberOfComments() {
+        return numberOfComments;
+    }
+
+    public void setNumberOfComments(Integer numberOfComments) {
+        this.numberOfComments = numberOfComments;
     }
 }

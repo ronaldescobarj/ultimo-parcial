@@ -1,5 +1,6 @@
 package com.ucbcba.demo.services;
 
+import com.ucbcba.demo.entities.Restaurant;
 import com.ucbcba.demo.entities.User;
 
 public interface UserService {
@@ -14,5 +15,7 @@ public interface UserService {
     User findById(Integer id);
 
     void deleteUser(Integer id);
+
+    Iterable<User> listAllUsers();
 
 }

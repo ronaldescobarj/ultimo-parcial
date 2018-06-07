@@ -52,4 +52,46 @@ public class CommentServiceImpl implements CommentService {
         return (Iterable<Comment>)res;
     }
 
+    @Override
+    public Integer numberOfCommentsByUser(Integer userId) {
+        List<Comment> allComments = (List<Comment>) commentRepository.findAll();
+        Integer res = 0;
+        for(int i=0;i<allComments.size();i++)
+        {
+            if(allComments.get(i).getUser().getId() == userId)
+                res++;
+        }
+        return res;
+    }
+
+    @Override
+    public Integer numberOfCommentsByRestaurant(Integer restaurantId) {
+        List<Comment> allComments = (List<Comment>) commentRepository.findAll();
+        Integer res = 0;
+        for(int i=0;i<allComments.size();i++)
+        {
+            if(allComments.get(i).getRestaurant().getId() == restaurantId)
+                res++;
+        }
+        return res;
+    }
+
+    @Override
+    public Float averageScoreByUser(Integer userId) {
+        List<Comment> allComments = (List<Comment>) commentRepository.findAll();
+        Integer numberOfScores = 0;
+        Float totalScore = 0.0f;
+        for(int i = 0; i < allComments.size(); i++)
+        {
+            if(allComments.get(i).getUser().getId() == userId) {
+                numberOfScores++;
+                totalScore += allComments.get(i).getScore();
+            }
+        }
+        if (numberOfScores != 0)
+            return totalScore/numberOfScores;
+        else
+            return 0.0f;
+    }
+
 }

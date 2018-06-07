@@ -1,6 +1,7 @@
 package com.ucbcba.demo.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Set;
@@ -24,6 +25,12 @@ public class User {
     private String firstName;
     @Size(min=1, message="This field cannot be blank")
     private String lastName;
+
+    @NotNull
+    private Integer numberOfComments = 0;
+
+    @NotNull
+    private Float averageScore = 0.0f;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
@@ -91,6 +98,22 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public Integer getNumberOfComments() {
+        return numberOfComments;
+    }
+
+    public void setNumberOfComments(Integer numberOfComments) {
+        this.numberOfComments = numberOfComments;
+    }
+
+    public Float getAverageScore() {
+        return averageScore;
+    }
+
+    public void setAverageScore(Float averageScore) {
+        this.averageScore = averageScore;
     }
 }
                                         
